@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Sign in</title>
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-light justify-content-center">
+    <a class="btn btn-primary" th:href="@{/auth/signup}">Sign up</a>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-center mt-5">
+        <form th:action="@{/auth/signin}"
+              th:object="${request}"
+              class="row g-3"
+              method="post"
+              style="width: 22rem">
+            <h3 class="text-center mb-4">Sign in</h3>
+            <input th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"
+                   type="hidden">
+            <input aria-label="Username"
+                   autofocus
+                   class="form-control"
+                   id="username"
+                   name="username"
+                   placeholder="Username"
+                   required
+                   th:value="*{username}"
+                   type="text">
+            <input aria-label="Password"
+                   class="form-control"
+                   id="password"
+                   name="password"
+                   placeholder="Password"
+                   required
+                   th:value="*{password}"
+                   type="password">
+            <div class="text-danger"
+                 th:if="${param.error}">Invalid credentials</div>
+            <input class="form-control btn btn-primary"
+                   type="submit"
+                   value="Sign in">
+        </form>
+    </div>
+</div>
+</body>
+</html>

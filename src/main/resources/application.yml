@@ -1,3 +1,7 @@
 spring:
   application:
     name: cloud-storage
+  datasource:
+    url: jdbc:mariadb://db:3306/cloudstorage
+    username: root
+    password: root

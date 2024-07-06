@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Error</title>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light justify-content-center">
+    <a class="btn btn-primary" th:href="@{/}">Home</a>
+</nav>
+<div class="row text-center mt-4">
+    <h3>Oops... Error occurred</h3>
+    <div th:text="${error}"></div>
+</div>
+</body>
+</html>

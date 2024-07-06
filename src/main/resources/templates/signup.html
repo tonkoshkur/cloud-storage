@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Sign up</title>
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-light justify-content-center">
+    <a class="btn btn-primary" th:href="@{/auth/signin}">Sign in</a>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-center mt-5">
+        <form th:action="@{/auth/signup}"
+              th:object="${request}"
+              class="row g-3"
+              method="post"
+              style="width: 22rem">
+            <h3 class="text-center mb-4">Sign up</h3>
+
+            <input aria-label="Username"
+                   autofocus
+                   class="form-control"
+                   id="username"
+                   maxlength="30"
+                   minlength="3"
+                   name="username"
+                   placeholder="Username"
+                   required
+                   th:value="*{username}"
+                   type="text">
+            <div class="text-danger"
+                 th:errors="*{username}"
+                 th:if="${#fields.hasErrors('username')}"></div>
+
+            <input aria-label="Password"
+                   class="form-control"
+                   id="password"
+                   maxlength="30"
+                   minlength="3"
+                   name="password"
+                   placeholder="Password"
+                   required
+                   th:value="*{password}"
+                   type="password">
+            <div class="text-danger"
+                 th:errors="*{password}"
+                 th:if="${#fields.hasErrors('password')}"></div>
+
+            <input aria-label="Confirm password"
+                   class="form-control"
+                   id="confirmPassword"
+                   maxlength="30"
+                   minlength="3"
+                   name="confirmPassword"
+                   placeholder="Confirm password"
+                   required
+                   th:value="*{confirmPassword}"
+                   type="password">
+            <div class="text-danger"
+                 th:errors="*{confirmPassword}"
+                 th:if="${#fields.hasErrors('confirmPassword')}"></div>
+
+            <div class="text-danger"
+                 th:each="globalError : ${#fields.globalErrors()}"
+                 th:text="${globalError}"></div>
+            <div class="text-danger"
+                 th:if="${error}"
+                 th:text="${error}"></div>
+
+            <input class="form-control btn btn-primary"
+                   type="submit"
+                   value="Sign up">
+        </form>
+    </div>
+</div>
+</body>
+</html>
