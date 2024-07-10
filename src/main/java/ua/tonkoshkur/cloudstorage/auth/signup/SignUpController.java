@@ -37,6 +37,6 @@ public class SignUpController {
             return new ModelAndView(SIGN_UP_PAGE, "error", ex.getMessage());
         }
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/auth/signin");
     }
 }
