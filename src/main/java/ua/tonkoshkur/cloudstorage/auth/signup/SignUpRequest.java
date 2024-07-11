@@ -11,7 +11,6 @@ public record SignUpRequest(
         @Size(min = 3)
         String password,
 
-        @Size(min = 3)
         String confirmPassword
 ) {
 }
