@@ -12,7 +12,7 @@ public record SignUpRequest(
 
         @Size(min = 3,
                 max = 50,
-                message = "Password must between 3 and 50 characters")
+                message = "Password must be between 3 and 50 characters")
         String password,
 
         String confirmPassword
