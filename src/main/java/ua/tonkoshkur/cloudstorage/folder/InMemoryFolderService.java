@@ -17,6 +17,18 @@ public class InMemoryFolderService implements FolderService {
     private String nameRegex;
 
     @Override
+    public List<FolderDto> findAllByQuery(long userId, String query) {
+        String userFolder = getUserFolderPath(userId);
+        return foldersByFullPath.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(userFolder))
+                .map(Map.Entry::getValue)
+                .filter(folder -> folder.name().toLowerCase().contains(query.toLowerCase()))
+                .sorted(Comparator.comparing(FolderDto::name))
+                .toList();
+    }
+
+    @Override
     public List<FolderDto> findAllByParentPath(long userId, String parentFolderPath) {
         String userFolder = getUserFolderPath(userId);
         return foldersByFullPath.entrySet()

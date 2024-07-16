@@ -20,6 +20,18 @@ public class InMemoryFileService implements FileService {
     private String nameRegex;
 
     @Override
+    public List<FileDto> findAllByQuery(long userId, String query) {
+        String userFolder = getUserFolderPath(userId);
+        return filesByFullPath.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(userFolder))
+                .map(Map.Entry::getValue)
+                .filter(folder -> folder.name().toLowerCase().contains(query.toLowerCase()))
+                .sorted(Comparator.comparing(FileDto::name))
+                .toList();
+    }
+
+    @Override
     public List<FileDto> findAllByFolderPath(long userId, String folderPath) {
         String userFolder = getUserFolderPath(userId);
         return filesByFullPath.entrySet()

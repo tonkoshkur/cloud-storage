@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FileService {
+    List<FileDto> findAllByQuery(long userId, String query);
+
     List<FileDto> findAllByFolderPath(long userId, String folderPath);
 
     InputStreamResource download(long userId, String path);

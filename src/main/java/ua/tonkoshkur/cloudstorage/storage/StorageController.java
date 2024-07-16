@@ -47,5 +47,19 @@ public class StorageController {
             model.addAttribute("parentFolderPath", breadcrumbs.get(breadcrumbsCount - 2).path());
         }
     }
+
+    @GetMapping("search")
+    public String search(@RequestParam String query,
+                         @RequestParam(required = false) String error,
+                         Model model,
+                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+        model.addAttribute("query", query);
+        model.addAttribute("error", error);
+
+        StorageContentDto content = storageService.findContentByName(userDetails.user().getId(), query);
+        model.addAttribute("content", content);
+
+        return STORAGE_PAGE;
+    }
 }
 

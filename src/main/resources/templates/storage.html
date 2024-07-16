@@ -21,6 +21,26 @@
      style="max-width: 50rem">
     <div class="container">
 
+        <!-- Search -->
+        <div class="d-flex justify-content-center">
+            <form class="d-flex align-items-center"
+                  th:action="@{/search}"
+                  th:method="get">
+                <input aria-label="Search"
+                       class="form-control"
+                       id="query"
+                       name="query"
+                       placeholder="Search"
+                       required
+                       th:value="${query}"
+                       type="text">
+                <a class="btn-close mx-2" th:href="@{/}" title="Clear"></a>
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+
         <div class="d-flex align-items-center gap-3 p-2 border-bottom">
 
             <!-- Breadcrumb -->

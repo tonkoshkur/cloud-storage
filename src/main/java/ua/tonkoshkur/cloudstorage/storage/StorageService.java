@@ -17,4 +17,10 @@ public class StorageService {
                 folderService.findAllByParentPath(userId, path),
                 fileService.findAllByFolderPath(userId, path));
     }
+
+    public StorageContentDto findContentByName(long userId, String name) {
+        return new StorageContentDto(
+                folderService.findAllByQuery(userId, name),
+                fileService.findAllByQuery(userId, name));
+    }
 }
