@@ -28,7 +28,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsServiceImpl)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/auth/**").anonymous()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage(SIGN_IN_PAGE)
