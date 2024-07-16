@@ -76,7 +76,7 @@ class SignUpIntegrationTest extends BaseIntegrationTest {
                 .statusCode(200)
                 .extract().response();
 
-        assertEquals("Username must be 3+ characters", getErrorMessage(response));
+        assertEquals("Username must be between 3 and 50 characters", getErrorMessage(response));
     }
 
     @Test
@@ -93,7 +93,7 @@ class SignUpIntegrationTest extends BaseIntegrationTest {
                 .statusCode(200)
                 .extract().response();
 
-        assertEquals("Password must be 3+ characters", getErrorMessage(response));
+        assertEquals("Password must be between 3 and 50 characters", getErrorMessage(response));
     }
 
     @Test
@@ -112,6 +112,6 @@ class SignUpIntegrationTest extends BaseIntegrationTest {
     }
 
     private String getErrorMessage(Response response) {
-        return response.htmlPath().getString("**.find { it.@class == 'text-danger' }");
+        return response.htmlPath().getString("**.find { it.@class =~ /invalid-feedback/ }");
     }
 }
