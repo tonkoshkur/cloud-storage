@@ -1,4 +1,4 @@
-package ua.tonkoshkur.cloudstorage.home;
+package ua.tonkoshkur.cloudstorage.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class HomeController {
+public class StorageController {
     @GetMapping
-    public String homePage() {
-        return "home";
+    public String storagePage() {
+        return "storage";
     }
 }
