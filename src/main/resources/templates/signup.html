@@ -11,19 +11,21 @@
 
 <div class="container">
     <div class="d-flex justify-content-center mt-5">
-        <form th:action="@{/auth/signup}"
-              th:object="${request}"
-              class="row g-3"
+        <form class="row g-3"
               method="post"
-              style="width: 22rem">
+              style="width: 22rem"
+              th:action="@{/auth/signup}"
+              th:object="${request}"
+              th:with="usernameHasErrors = ${#fields.hasErrors('username')},
+              passwordHasErrors = ${#fields.hasErrors('password')},
+              confirmPasswordHasErrors = ${#fields.hasErrors('confirmPassword') || #fields.hasGlobalErrors()}">
+
             <h3 class="text-center mb-4">Sign up</h3>
 
             <input aria-label="Username"
                    autofocus
                    class="form-control"
                    id="username"
-                   maxlength="30"
-                   minlength="3"
                    name="username"
                    placeholder="Username"
                    required
@@ -31,13 +33,11 @@
                    type="text">
             <div class="text-danger"
                  th:errors="*{username}"
-                 th:if="${#fields.hasErrors('username')}"></div>
+                 th:if="${usernameHasErrors}"></div>
 
             <input aria-label="Password"
                    class="form-control"
                    id="password"
-                   maxlength="30"
-                   minlength="3"
                    name="password"
                    placeholder="Password"
                    required
@@ -45,13 +45,11 @@
                    type="password">
             <div class="text-danger"
                  th:errors="*{password}"
-                 th:if="${#fields.hasErrors('password')}"></div>
+                 th:if="${passwordHasErrors}"></div>
 
             <input aria-label="Confirm password"
                    class="form-control"
                    id="confirmPassword"
-                   maxlength="30"
-                   minlength="3"
                    name="confirmPassword"
                    placeholder="Confirm password"
                    required
@@ -59,7 +57,7 @@
                    type="password">
             <div class="text-danger"
                  th:errors="*{confirmPassword}"
-                 th:if="${#fields.hasErrors('confirmPassword')}"></div>
+                 th:if="${confirmPasswordHasErrors}"></div>
 
             <div class="text-danger"
                  th:each="globalError : ${#fields.globalErrors()}"
