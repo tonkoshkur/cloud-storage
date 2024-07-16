@@ -34,7 +34,7 @@
                    required
                    th:value="*{password}"
                    type="password">
-            <div class="text-danger"
+            <div class="d-block invalid-feedback"
                  th:if="${param.error}">Invalid credentials</div>
             <input class="form-control btn btn-primary"
                    type="submit"
