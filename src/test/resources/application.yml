@@ -1,7 +1,12 @@
 spring:
+  application:
+    name: cloud-storage
   datasource:
     url: jdbc:tc:mariadb://db:3306/cloudstorage
     username: root
     password: root
+minio:
+  bucket-name: user-files
+  user-folder-format: user-%s-files/
 validation:
   name-regex: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
