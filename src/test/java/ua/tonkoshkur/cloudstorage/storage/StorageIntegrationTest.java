@@ -1,4 +1,4 @@
-package ua.tonkoshkur.cloudstorage.home;
+package ua.tonkoshkur.cloudstorage.storage;
 
 import org.junit.jupiter.api.Test;
 import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
@@ -6,7 +6,7 @@ import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.endsWith;
 
-class HomeIntegrationTest extends BaseIntegrationTest {
+class StorageIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getRequest_withUnauthenticatedUser_redirectsToSignInPage() {
