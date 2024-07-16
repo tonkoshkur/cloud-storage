@@ -1,0 +1,33 @@
+<div aria-hidden="true"
+     aria-labelledby="modalLabel"
+     class="modal fade"
+     tabindex="-1"
+     th:fragment="deletefolder (folder, modalId)"
+     th:id="${'deleteFolderModal' + modalId}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">Delete folder</h1>
+                <button aria-label="Close"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        type="button"></button>
+            </div>
+            <form th:action="@{/folder/delete}"
+                  th:method="post">
+                <div class="modal-body">
+                    <div>Do you really want to delete the folder '<span th:text="${folder.name()}"></span>'?</div>
+                    <input name="path"
+                           th:value="${folder.path()}"
+                           type="hidden">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary"
+                            th:id="${'deleteFolderButton' + modalId}"
+                            type="submit">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

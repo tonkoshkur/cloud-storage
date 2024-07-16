@@ -17,5 +17,187 @@
     </div>
 </nav>
 
+<div class="container d-flex justify-content-center gap-3 my-4"
+     style="max-width: 50rem">
+    <div class="container">
+
+        <div class="d-flex align-items-center gap-3 p-2 border-bottom">
+
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="flex-grow-1">
+                <ol class="breadcrumb m-0">
+                    <li th:class="${breadcrumbs == null ? 'breadcrumb-item active' : 'breadcrumb-item'}">
+                        <a class="text-decoration-none bi bi-house fs-4"
+                           th:href="@{/}"></a>
+                    </li>
+                    <li th:class="|breadcrumb-item align-self-center ${breadcrumb.active() ? 'active' : ''}|"
+                        th:if="${breadcrumbs}"
+                        th:each="breadcrumb : ${breadcrumbs}">
+                        <a class="text-decoration-none"
+                           th:href="|@{/?path=}${breadcrumb.path()}|"
+                           th:text="${breadcrumb.label()}"
+                           th:unless="${breadcrumb.active()}"></a>
+                        <span th:if="${breadcrumb.active()}"
+                              th:text="${breadcrumb.label()}"></span>
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Add folder, upload file buttons -->
+            <div class="d-flex gap-3" th:unless="${query}">
+                <div th:replace="~{modals/createfolder (${path})}"></div>
+                <div th:replace="~{modals/uploadfile (${path})}"></div>
+                <button class="btn btn-primary" data-bs-target="#createFolderModal" data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-folder-plus"></i>
+                </button>
+                <button class="btn btn-primary" data-bs-target="#uploadFileModal" data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-file-earmark-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <ul class="list-group list-group-flush">
+            <!-- Parent folder button -->
+            <li class="list-group-item"
+                th:if="${path != null}">
+                <a class="bi bi-arrow-90deg-left stretched-link"
+                   th:href="|@{/}${parentFolderPath == null ? '' : '?path=' + parentFolderPath}|"></a>
+            </li>
+
+            <!-- Folders -->
+            <li class="list-group-item py-0 d-flex align-items-center justify-content-between"
+                th:each="folder,status : ${content.folders()}">
+                <i class="bi bi-folder me-3 text-primary"></i>
+                <a class="flex-grow-1 text-decoration-none text-truncate"
+                   th:href="|@{/?path=}${folder.path()}|"
+                   th:text="${query == null ? folder.name() : folder.path()}"></a>
+
+                <!-- Open parent folder button -->
+                <a class="btn text-primary bi bi-arrow-90deg-up"
+                   th:if="${query}"
+                   th:with="parentPath = ${folder.parentFolderPath()}"
+                   th:href="|@{/}${parentPath == null ? '' : '?path=' + parentPath}|"></a>
+
+                <!-- Rename button -->
+                <div th:insert="~{modals/renamefolder :: renamefolder(${folder},${status.index})}"></div>
+                <button class="btn text-primary"
+                        th:data-bs-target="|#renameFolderModal${status.index}|"
+                        data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <!-- Delete button -->
+                <div th:insert="~{modals/deletefolder :: deletefolder(${folder},${status.index})}"></div>
+                <button class="btn text-danger"
+                        th:data-bs-target="|#deleteFolderModal${status.index}|"
+                        data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </li>
+
+            <!-- Files -->
+            <li class="list-group-item py-0 d-flex align-items-center justify-content-between text-primary"
+                th:each="file,status : ${content.files()}">
+                <i class="bi bi-file-earmark me-3"></i>
+                <div class="flex-grow-1 text-truncate"
+                     th:text="${query == null ? file.name() : file.path()}"></div>
+
+                <!-- Download button -->
+                <a class="btn text-primary bi bi-download"
+                   th:href="|@{/file/download?path=}${file.path()}|"></a>
+
+                <!-- Open folder button -->
+                <a class="btn text-primary bi bi-folder-symlink"
+                   th:if="${query}"
+                   th:with="folderPath = ${file.folderPath()}"
+                   th:href="|@{/}${folderPath == null ? '' : '?path=' + folderPath}|"></a>
+
+                <!-- Rename button -->
+                <div th:insert="~{modals/renamefile :: renamefile(${file},${status.index})}"></div>
+                <button class="btn text-primary"
+                        th:data-bs-target="|#renameFileModal${status.index}|"
+                        data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <!-- Delete button -->
+                <div th:insert="~{modals/deletefile :: deletefile(${file},${status.index})}"></div>
+                <button class="btn text-danger"
+                        th:data-bs-target="|#deleteFileModal${status.index}"
+                        data-bs-toggle="modal"
+                        type="button">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- Error toast -->
+<div aria-atomic="true"
+     aria-live="assertive"
+     class="toast show position-fixed top-0 end-0 m-3"
+     role="alert"
+     th:if="${error}">
+    <div class="toast-header">
+        <i class="bi bi-exclamation-circle text-danger me-2"></i>
+        <strong class="me-auto">Error</strong>
+        <button aria-label="Close"
+                class="btn-close"
+                data-bs-dismiss="toast"
+                onclick="location.href=location.href.replace(/[?&]?error=([^&]$|[^&]*)/i, '')"
+                type="button">
+        </button>
+    </div>
+    <div class="toast-body" th:text="${error}"></div>
+</div>
+
+<!-- Add modal listeners -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const folders = /*[[${content.folders()}]]*/ [];
+    const files = /*[[${content.files()}]]*/ [];
+
+    folders.forEach((folder, index) => {
+        document.getElementById('renameFolderModal' + index).addEventListener('shown.bs.modal', () => {
+            const newNameInput = document.getElementById('newFolderNameInput' + index)
+            newNameInput.focus();
+            newNameInput.setSelectionRange(newNameInput.value.length, newNameInput.value.length);
+        });
+        document.getElementById('deleteFolderModal' + index).addEventListener('shown.bs.modal', () => {
+            document.getElementById('deleteFolderButton' + index).focus();
+        });
+    })
+
+    files.forEach((file, index) => {
+        document.getElementById('renameFileModal' + index).addEventListener('shown.bs.modal', () => {
+            const newNameInput = document.getElementById('newFileNameInput' + index)
+            newNameInput.focus();
+            newNameInput.setSelectionRange(newNameInput.value.length, newNameInput.value.length);
+        });
+        document.getElementById('deleteFileModal' + index).addEventListener('shown.bs.modal', () => {
+            document.getElementById('deleteFileButton' + index).focus();
+        });
+    })
+
+    document.getElementById('createFolderModal').addEventListener('shown.bs.modal', () => {
+        document.getElementById('name').focus()
+    })
+
+    document.getElementById('uploadFileModal').addEventListener('shown.bs.modal', () => {
+        document.getElementById('file').focus()
+    })
+
+    document.getElementById('file').addEventListener('change', function () {
+        document.getElementById('uploadButton').focus();
+    });
+    /*]]>*/
+</script>
 </body>
 </html>

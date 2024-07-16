@@ -5,3 +5,5 @@ spring:
     url: jdbc:mariadb://db:3306/cloudstorage
     username: root
     password: root
+validation:
+  name-regex: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$

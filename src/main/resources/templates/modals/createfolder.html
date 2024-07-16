@@ -1,0 +1,39 @@
+<div aria-hidden="true"
+     aria-labelledby="modalLabel"
+     class="modal fade"
+     id="createFolderModal"
+     tabindex="-1"
+     th:fragment="createfolder (parentFolderPath)">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel">Create folder</h1>
+                <button aria-label="Close"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        type="button"></button>
+            </div>
+            <form th:action="@{/folder/create}"
+                  th:method="post">
+                <div class="modal-body">
+                    <input aria-label="Folder name"
+                           autofocus
+                           class="form-control"
+                           id="name"
+                           name="name"
+                           placeholder="Folder name"
+                           required
+                           type="text">
+                    <input name="parentFolderPath"
+                           th:if="${parentFolderPath}"
+                           th:value="${parentFolderPath}"
+                           type="hidden">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

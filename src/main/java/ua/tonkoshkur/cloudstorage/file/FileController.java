@@ -1,0 +1,61 @@
+package ua.tonkoshkur.cloudstorage.file;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
+import ua.tonkoshkur.cloudstorage.util.UrlHelper;
+
+@RequestMapping("file")
+@Controller
+@RequiredArgsConstructor
+public class FileController {
+
+    private final FileService fileService;
+
+    @PostMapping("upload")
+    public String upload(MultipartFile file,
+                         String folderPath,
+                         HttpServletRequest request,
+                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+        fileService.upload(userDetails.user().getId(), file, folderPath);
+        return UrlHelper.buildRefererRedirectUrl(request);
+    }
+
+    @GetMapping("download")
+    public ResponseEntity<InputStreamResource> download(@RequestParam String path,
+                                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        InputStreamResource resource = fileService.download(userDetails.user().getId(), path);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"file\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
+    @PostMapping("rename")
+    public String rename(String oldPath,
+                         String newName,
+                         HttpServletRequest request,
+                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+        fileService.rename(userDetails.user().getId(), oldPath, newName);
+        return UrlHelper.buildRefererRedirectUrl(request);
+    }
+
+    @PostMapping("delete")
+    public String delete(String path,
+                         HttpServletRequest request,
+                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+        fileService.delete(userDetails.user().getId(), path);
+        return UrlHelper.buildRefererRedirectUrl(request);
+    }
+}
