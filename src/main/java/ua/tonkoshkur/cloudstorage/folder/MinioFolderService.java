@@ -75,7 +75,8 @@ public class MinioFolderService implements FolderService {
 
     @SneakyThrows
     @Override
-    public void create(long userId, String name, String parentFolderPath) {
+    public void create(long userId, String name, String parentFolderPath)
+            throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(name);
         FolderDto folder = new FolderDto(name, parentFolderPath);
         throwIfExists(userId, folder);
@@ -85,7 +86,8 @@ public class MinioFolderService implements FolderService {
 
     @SneakyThrows
     @Override
-    public void rename(long userId, String oldPath, String newName) {
+    public void rename(long userId, String oldPath, String newName)
+            throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(newName);
         String parentFolderPath = PathHelper.excludeParentFolder(oldPath);
         FolderDto newFolder = new FolderDto(newName, parentFolderPath);

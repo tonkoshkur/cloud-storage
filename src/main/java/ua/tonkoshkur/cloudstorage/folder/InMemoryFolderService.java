@@ -41,7 +41,8 @@ public class InMemoryFolderService implements FolderService {
     }
 
     @Override
-    public void create(long userId, String name, String parentFolderPath) throws FolderAlreadyExistsException {
+    public void create(long userId, String name, String parentFolderPath)
+            throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(name);
         FolderDto folder = new FolderDto(name, parentFolderPath);
         throwIfExists(userId, folder);
@@ -50,7 +51,8 @@ public class InMemoryFolderService implements FolderService {
     }
 
     @Override
-    public void rename(long userId, String oldPath, String newName) throws FolderAlreadyExistsException {
+    public void rename(long userId, String oldPath, String newName)
+            throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(newName);
         String parentFolderPath = PathHelper.excludeParentFolder(oldPath);
         FolderDto folder = new FolderDto(newName, parentFolderPath);
