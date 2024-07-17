@@ -1,0 +1,16 @@
+<div class="drop-zone border-primary-subtle"
+     th:fragment="dropzone (folderPath)">
+
+    <span class="drop-zone__prompt text-secondary">Drop file here or click to upload</span>
+    <input aria-label="File"
+           class="drop-zone__input"
+           id="file"
+           name="file"
+           required
+           type="file">
+    <input name="folderPath"
+           th:if="${folderPath}"
+           th:value="${folderPath}"
+           type="hidden">
+    <script th:src="@{/scripts/drag-zone.js}"></script>
+</div>
