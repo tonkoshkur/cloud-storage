@@ -5,6 +5,10 @@ spring:
     url: jdbc:mariadb://db:3306/cloudstorage
     username: root
     password: root
+  data:
+    redis:
+      host: redis
+      port: 6379
 minio:
   url: http://minio:9000
   access-key: minioadmin
