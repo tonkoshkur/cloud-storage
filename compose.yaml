@@ -9,6 +9,8 @@ services:
       MARIADB_PASSWORD: root
       MARIADB_ROOT_PASSWORD: root
       MARIADB_USER: root
+      volumes:
+        db_data:/var/lib/mysql
     ports:
       - '3306'
   minio:
@@ -17,11 +19,15 @@ services:
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
     ports:
       - '9000'
     command: server /data
   redis:
     image: 'redis:latest'
+    volumes:
+      - redis_data:/data
     ports:
       - '6379'
   app:
@@ -33,3 +39,7 @@ services:
       - db
       - minio
       - redis
+volumes:
+  db_data:
+  minio_data:
+  redis_data:
