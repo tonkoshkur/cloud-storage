@@ -10,14 +10,14 @@ public final class PathHelper {
 
     public static final String PATH_SEPARATOR = "/";
 
-    public static String excludeName(String path) {
+    public static String extractName(String path) {
         return path.contains(PATH_SEPARATOR)
                 ? path.substring(path.lastIndexOf(PATH_SEPARATOR) + 1)
                 : path;
     }
 
     @Nullable
-    public static String excludeParentFolder(String path) {
+    public static String extractParentFolder(String path) {
         if (path == null || !path.contains(PATH_SEPARATOR)) {
             return null;
         }

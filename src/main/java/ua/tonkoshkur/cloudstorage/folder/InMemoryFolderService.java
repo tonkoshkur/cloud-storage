@@ -54,7 +54,7 @@ public class InMemoryFolderService implements FolderService {
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(newName);
-        String parentFolderPath = PathHelper.excludeParentFolder(oldPath);
+        String parentFolderPath = PathHelper.extractParentFolder(oldPath);
         FolderDto folder = new FolderDto(newName, parentFolderPath);
         throwIfExists(userId, folder);
         String oldFullPath = getFullPath(userId, oldPath);

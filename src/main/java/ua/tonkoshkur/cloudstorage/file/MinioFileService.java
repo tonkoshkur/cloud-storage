@@ -59,8 +59,8 @@ public class MinioFileService implements FileService {
                 continue;
             }
             folders.add(new FileDto(
-                    PathHelper.excludeName(path),
-                    PathHelper.excludeParentFolder(path)));
+                    PathHelper.extractName(path),
+                    PathHelper.extractParentFolder(path)));
         }
         return folders;
     }
@@ -96,7 +96,7 @@ public class MinioFileService implements FileService {
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFileNameException, FileAlreadyExistsException {
         validateName(newName);
-        String folderPath = PathHelper.excludeParentFolder(oldPath);
+        String folderPath = PathHelper.extractParentFolder(oldPath);
         FileDto newFile = new FileDto(newName, folderPath);
         String newPath = newFile.path();
         if (newPath.equals(oldPath)) {

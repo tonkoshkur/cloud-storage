@@ -56,8 +56,8 @@ public class MinioFolderService implements FolderService {
             }
             String path = getShortPath(userId, item.objectName());
             folders.add(new FolderDto(
-                    PathHelper.excludeName(path),
-                    PathHelper.excludeParentFolder(path)));
+                    PathHelper.extractName(path),
+                    PathHelper.extractParentFolder(path)));
         }
         return folders;
     }
@@ -89,7 +89,7 @@ public class MinioFolderService implements FolderService {
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
         validateName(newName);
-        String parentFolderPath = PathHelper.excludeParentFolder(oldPath);
+        String parentFolderPath = PathHelper.extractParentFolder(oldPath);
         FolderDto newFolder = new FolderDto(newName, parentFolderPath);
         String newPath = newFolder.path();
         if (newPath.equals(oldPath)) {

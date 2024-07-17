@@ -64,7 +64,7 @@ public class InMemoryFileService implements FileService {
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFileNameException, FileAlreadyExistsException {
         validateName(newName);
-        String folderPath = PathHelper.excludeParentFolder(oldPath);
+        String folderPath = PathHelper.extractParentFolder(oldPath);
         FileDto file = new FileDto(newName, folderPath);
         throwIfExists(userId, file);
         String oldFullPath = getFullPath(userId, oldPath);
