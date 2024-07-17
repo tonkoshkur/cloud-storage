@@ -1,4 +1,4 @@
-package ua.tonkoshkur.cloudstorage.config;
+package ua.tonkoshkur.cloudstorage.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
