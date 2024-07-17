@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
+import ua.tonkoshkur.cloudstorage.util.PathHelper;
 import ua.tonkoshkur.cloudstorage.util.UrlHelper;
 
 @RequestMapping("file")
@@ -36,8 +37,9 @@ public class FileController {
     public ResponseEntity<InputStreamResource> download(@RequestParam String path,
                                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         InputStreamResource resource = fileService.download(userDetails.user().getId(), path);
+        String fileName = PathHelper.extractName(path);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"file\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
