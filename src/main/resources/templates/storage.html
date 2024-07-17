@@ -65,8 +65,8 @@
 
             <!-- Add folder, upload file buttons -->
             <div class="d-flex gap-3" th:unless="${query}">
-                <div th:replace="~{modals/createfolder (${path})}"></div>
-                <div th:replace="~{modals/uploadfile (${path})}"></div>
+                <div th:replace="~{modals/create-folder (${path})}"></div>
+                <div th:replace="~{modals/upload-file (${path})}"></div>
                 <button class="btn btn-primary" data-bs-target="#createFolderModal" data-bs-toggle="modal"
                         type="button">
                     <i class="bi bi-folder-plus"></i>
@@ -101,7 +101,7 @@
                    th:href="|@{/}${parentPath == null ? '' : '?path=' + parentPath}|"></a>
 
                 <!-- Rename button -->
-                <div th:insert="~{modals/renamefolder :: renamefolder(${folder},${status.index})}"></div>
+                <div th:insert="~{modals/rename-folder :: renamefolder(${folder},${status.index})}"></div>
                 <button class="btn text-primary"
                         th:data-bs-target="|#renameFolderModal${status.index}|"
                         data-bs-toggle="modal"
@@ -110,7 +110,7 @@
                 </button>
 
                 <!-- Delete button -->
-                <div th:insert="~{modals/deletefolder :: deletefolder(${folder},${status.index})}"></div>
+                <div th:insert="~{modals/delete-folder :: deletefolder(${folder},${status.index})}"></div>
                 <button class="btn text-danger"
                         th:data-bs-target="|#deleteFolderModal${status.index}|"
                         data-bs-toggle="modal"
@@ -137,7 +137,7 @@
                    th:href="|@{/}${folderPath == null ? '' : '?path=' + folderPath}|"></a>
 
                 <!-- Rename button -->
-                <div th:insert="~{modals/renamefile :: renamefile(${file},${status.index})}"></div>
+                <div th:insert="~{modals/rename-file :: renamefile(${file},${status.index})}"></div>
                 <button class="btn text-primary"
                         th:data-bs-target="|#renameFileModal${status.index}|"
                         data-bs-toggle="modal"
@@ -146,7 +146,7 @@
                 </button>
 
                 <!-- Delete button -->
-                <div th:insert="~{modals/deletefile :: deletefile(${file},${status.index})}"></div>
+                <div th:insert="~{modals/delete-file :: deletefile(${file},${status.index})}"></div>
                 <button class="btn text-danger"
                         th:data-bs-target="|#deleteFileModal${status.index}"
                         data-bs-toggle="modal"
