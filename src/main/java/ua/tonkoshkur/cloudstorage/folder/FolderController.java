@@ -18,7 +18,7 @@ public class FolderController {
 
     private final FolderService folderService;
 
-    @PostMapping("create")
+    @PostMapping
     public String create(String name,
                          String parentFolderPath,
                          HttpServletRequest request,
@@ -27,7 +27,7 @@ public class FolderController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @PutMapping("rename")
+    @PutMapping
     public String rename(String oldPath,
                          String newName,
                          HttpServletRequest request,
@@ -36,7 +36,7 @@ public class FolderController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping
     public String delete(String path,
                          HttpServletRequest request,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
