@@ -14,7 +14,7 @@
                         type="button"></button>
             </div>
             <form th:action="@{/file/delete}"
-                  th:method="post">
+                  th:method="delete">
                 <div class="modal-body">
                     <div>Do you really want to delete the file '<span th:text="${file.name()}"></span>'?</div>
                     <input name="path"

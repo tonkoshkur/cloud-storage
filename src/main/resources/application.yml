@@ -9,6 +9,10 @@ spring:
     redis:
       host: redis
       port: 6379
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   servlet:
     multipart:
       max-file-size: 10MB

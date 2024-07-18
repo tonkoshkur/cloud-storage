@@ -8,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
@@ -44,7 +41,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @PostMapping("rename")
+    @PutMapping("rename")
     public String rename(String oldPath,
                          String newName,
                          HttpServletRequest request,
@@ -53,7 +50,7 @@ public class FileController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @PostMapping("delete")
+    @DeleteMapping("delete")
     public String delete(String path,
                          HttpServletRequest request,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
