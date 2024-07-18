@@ -5,6 +5,9 @@ import io.minio.messages.Item;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
@@ -19,7 +22,6 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
 
     private static final long USER_ID = 1;
     private static final String VALID_FOLDER_NAME = "folder";
-    private static final String INVALID_FOLDER_NAME = "f/d";
     private static final String PARENT_FOLDER = "parentFolder";
     private static final FolderDto FOLDER = new FolderDto(VALID_FOLDER_NAME, PARENT_FOLDER);
 
@@ -88,10 +90,12 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
         assertThat(folders).isEmpty();
     }
 
-    @Test
-    void create_withInvalidFolderName_throwsInvalidFolderNameException() {
+    @ParameterizedTest
+    @EmptySource
+    @MethodSource("getInvalidMinioCharacters")
+    void create_withInvalidFolderName_throwsInvalidFolderNameException(String invalidFolderName) {
         assertThrows(InvalidFolderNameException.class,
-                () -> minioFolderService.create(USER_ID, INVALID_FOLDER_NAME, PARENT_FOLDER));
+                () -> minioFolderService.create(USER_ID, invalidFolderName, PARENT_FOLDER));
     }
 
     @Test
@@ -101,10 +105,12 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
                 () -> minioFolderService.create(USER_ID, VALID_FOLDER_NAME, PARENT_FOLDER));
     }
 
-    @Test
-    void rename_withInvalidFolderName_throwsInvalidFolderNameException() {
+    @ParameterizedTest
+    @EmptySource
+    @MethodSource("getInvalidMinioCharacters")
+    void rename_withInvalidFolderName_throwsInvalidFolderNameException(String invalidFolderName) {
         assertThrows(InvalidFolderNameException.class,
-                () -> minioFolderService.rename(USER_ID, "", INVALID_FOLDER_NAME));
+                () -> minioFolderService.rename(USER_ID, "", invalidFolderName));
     }
 
     @Test

@@ -3,6 +3,9 @@ package ua.tonkoshkur.cloudstorage.auth.signup;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
 import ua.tonkoshkur.cloudstorage.user.User;
@@ -62,12 +65,14 @@ class SignUpIntegrationTest extends BaseIntegrationTest {
         assertEquals("User already exists", getErrorMessage(response));
     }
 
-    @Test
-    void postRequest_withInvalidUsername_returnsPageWithErrorMessage() {
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {"", "1", "22", "string_with_length_equals_51......................."})
+    void postRequest_withInvalidUsername_returnsPageWithErrorMessage(String username) {
         String password = "pass";
 
         Response response = given()
-                .formParam(USERNAME_PARAM, "u")
+                .formParam(USERNAME_PARAM, username)
                 .formParam(PASSWORD_PARAM, password)
                 .formParam(CONFIRM_PASSWORD_PARAM, password)
                 .when()
@@ -79,10 +84,10 @@ class SignUpIntegrationTest extends BaseIntegrationTest {
         assertEquals("Username must be between 3 and 50 characters", getErrorMessage(response));
     }
 
-    @Test
-    void postRequest_withInvalidPassword_returnsPageWithErrorMessage() {
-        String invalidPassword = "p";
-
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {"", "1", "22", "string_with_length_equals_51......................."})
+    void postRequest_withInvalidPassword_returnsPageWithErrorMessage(String invalidPassword) {
         Response response = given()
                 .formParam(USERNAME_PARAM, "user")
                 .formParam(PASSWORD_PARAM, invalidPassword)

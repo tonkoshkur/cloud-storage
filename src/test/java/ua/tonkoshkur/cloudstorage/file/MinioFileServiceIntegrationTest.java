@@ -5,6 +5,9 @@ import io.minio.messages.Item;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -21,13 +24,10 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
 
     private static final long USER_ID = 1;
     private static final String FILE_NAME = "file";
-    private static final String INVALID_FILE_NAME = "file/";
     private static final String FOLDER_NAME = "folder";
     private static final FileDto FILE = new FileDto(FILE_NAME, FOLDER_NAME);
     private static final MultipartFile MULTIPART_FILE =
             new MockMultipartFile(FILE_NAME, FILE_NAME, null, (byte[]) null);
-    private static final MultipartFile MULTIPART_FILE_WITH_INVALID_NAME
-            = new MockMultipartFile(INVALID_FILE_NAME, INVALID_FILE_NAME, null, (byte[]) null);
 
     @Autowired
     MinioFileService minioFileService;
@@ -94,10 +94,12 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
         assertThat(files).isEmpty();
     }
 
-    @Test
-    void upload_withInvalidFileName_throwsInvalidFileNameException() {
+    @ParameterizedTest
+    @MethodSource("getInvalidMinioCharacters")
+    void upload_withInvalidFileName_throwsInvalidFileNameException(String invalidFileName) {
+        MultipartFile multipartFile = new MockMultipartFile(invalidFileName, invalidFileName, null, (byte[]) null);
         assertThrows(InvalidFileNameException.class,
-                () -> minioFileService.upload(USER_ID, MULTIPART_FILE_WITH_INVALID_NAME, FOLDER_NAME));
+                () -> minioFileService.upload(USER_ID, multipartFile, FOLDER_NAME));
     }
 
     @Test
@@ -107,10 +109,12 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
                 () -> minioFileService.upload(USER_ID, MULTIPART_FILE, FOLDER_NAME));
     }
 
-    @Test
-    void rename_withInvalidFileName_throwsInvalidFileNameException() {
+    @ParameterizedTest
+    @EmptySource
+    @MethodSource("getInvalidMinioCharacters")
+    void rename_withInvalidFileName_throwsInvalidFileNameException(String invalidFileName) {
         assertThrows(InvalidFileNameException.class,
-                () -> minioFileService.rename(USER_ID, "", INVALID_FILE_NAME));
+                () -> minioFileService.rename(USER_ID, "", invalidFileName));
     }
 
     @Test
