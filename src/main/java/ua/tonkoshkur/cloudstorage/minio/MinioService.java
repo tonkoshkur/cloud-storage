@@ -2,6 +2,8 @@ package ua.tonkoshkur.cloudstorage.minio;
 
 import io.minio.*;
 import io.minio.errors.ErrorResponseException;
+import io.minio.messages.DeleteError;
+import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -91,6 +94,20 @@ public class MinioService {
                 .bucket(bucketName)
                 .object(path)
                 .build());
+    }
+
+    @SneakyThrows
+    public void deleteAll(List<String> paths) {
+        List<DeleteObject> objects = paths.stream()
+                .map(DeleteObject::new)
+                .toList();
+        Iterable<Result<DeleteError>> results = minioClient.removeObjects(RemoveObjectsArgs.builder()
+                .bucket(bucketName)
+                .objects(objects)
+                .build());
+        for (Result<DeleteError> result : results) {
+            result.get();
+        }
     }
 
     @SneakyThrows

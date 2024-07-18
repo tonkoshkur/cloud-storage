@@ -117,9 +117,11 @@ public class MinioFolderService implements FolderService {
     public void delete(long userId, String folderPath) {
         String fullPath = getFullPath(userId, folderPath);
         Iterable<Result<Item>> results = minioService.findAll(fullPath, true);
+        List<String> paths = new ArrayList<>();
         for (Result<Item> resultItem : results) {
-            minioService.delete(resultItem.get().objectName());
+            paths.add(resultItem.get().objectName());
         }
+        minioService.deleteAll(paths);
     }
 
     @SneakyThrows
