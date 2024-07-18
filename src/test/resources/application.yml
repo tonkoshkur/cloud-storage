@@ -5,6 +5,9 @@ spring:
     url: jdbc:tc:mariadb://db:3306/cloudstorage
     username: root
     password: root
+  servlet:
+    multipart:
+      max-file-size: 10MB
 minio:
   bucket-name: user-files
   user-folder-format: user-%s-files/
