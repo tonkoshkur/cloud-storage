@@ -33,6 +33,19 @@ services:
   app:
     restart: always
     build: ./
+    environment:
+      DB_URL: jdbc:mariadb://db:3306/cloudstorage
+      DB_USER: root
+      DB_PASSWORD: qRzuu2S4JON9BEfz5nAdMt58
+      MINIO_URL: http://minio:9000
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: 9QOYduVpm5CI5G5UV15sjAAb
+      MINIO_BUCKET_NAME: user-files
+      MINIO_USER_FOLDER_FORMAT: user-%s-files/
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MAX_MULTIPART_FILE_SIZE: 10MB
+      FILE_AND_FOLDER_NAME_REGEX: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
     ports:
       - '8080:8080'
     depends_on:

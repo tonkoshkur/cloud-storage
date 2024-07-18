@@ -2,29 +2,29 @@ spring:
   application:
     name: cloud-storage
   datasource:
-    url: jdbc:mariadb://db:3306/cloudstorage
-    username: root
-    password: root
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   data:
     redis:
-      host: redis
-      port: 6379
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
   mvc:
     hiddenmethod:
       filter:
         enabled: true
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${MAX_MULTIPART_FILE_SIZE}
+      max-request-size: ${MAX_MULTIPART_FILE_SIZE}
 server:
   tomcat:
     max-swallow-size: -1
 minio:
-  url: http://minio:9000
-  access-key: minioadmin
-  access-secret: minioadmin
-  bucket-name: user-files
-  user-folder-format: user-%s-files/
+  url: ${MINIO_URL}
+  access-key: ${MINIO_ACCESS_KEY}
+  access-secret: ${MINIO_ACCESS_SECRET}
+  bucket-name: ${MINIO_BUCKET_NAME}
+  user-folder-format: ${MINIO_USER_FOLDER_FORMAT}
 validation:
-  name-regex: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
+  name-regex: ${FILE_AND_FOLDER_NAME_REGEX}
