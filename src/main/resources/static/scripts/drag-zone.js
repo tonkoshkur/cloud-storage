@@ -1,71 +1,87 @@
 document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
-    const dropZoneElement = inputElement.closest(".drop-zone");
+    const dropZone = inputElement.closest(".drop-zone");
 
-    dropZoneElement.addEventListener("click", (e) => {
+    dropZone.addEventListener("click", () => {
         inputElement.click();
     });
 
-    inputElement.addEventListener("change", (e) => {
+    inputElement.addEventListener("change", () => {
         if (inputElement.files.length) {
-            updateThumbnail(dropZoneElement, inputElement.files[0]);
+            hidePrompt(dropZone);
+            addThumbnail(dropZone, inputElement.files[0]);
+            document.getElementById('uploadButton').focus();
+        } else {
+            showPrompt(dropZone);
+            removeThumbnail(dropZone);
         }
     });
 
-    dropZoneElement.addEventListener("dragover", (e) => {
+    dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
-        dropZoneElement.classList.add("drop-zone--over");
+        dropZone.classList.add("drop-zone--over");
     });
 
     ["dragleave", "dragend"].forEach((type) => {
-        dropZoneElement.addEventListener(type, (e) => {
-            dropZoneElement.classList.remove("drop-zone--over");
+        dropZone.addEventListener(type, () => {
+            dropZone.classList.remove("drop-zone--over");
         });
     });
 
-    dropZoneElement.addEventListener("drop", (e) => {
+    dropZone.addEventListener("drop", (e) => {
         e.preventDefault();
 
         if (e.dataTransfer.files.length) {
             inputElement.files = e.dataTransfer.files;
-            updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+            hidePrompt(dropZone);
+            addThumbnail(dropZone, e.dataTransfer.files[0]);
         }
 
-        dropZoneElement.classList.remove("drop-zone--over");
+        dropZone.classList.remove("drop-zone--over");
     });
 });
 
-/**
- * Updates the thumbnail on a drop zone element.
- *
- * @param {HTMLElement} dropZoneElement
- * @param {File} file
- */
-function updateThumbnail(dropZoneElement, file) {
-    let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+function hidePrompt(dropZoneElement) {
+    getPrompt(dropZoneElement).style.display = 'none';
+}
 
-    // First time - remove the prompt
-    if (dropZoneElement.querySelector(".drop-zone__prompt")) {
-        dropZoneElement.querySelector(".drop-zone__prompt").remove();
+function showPrompt(dropZoneElement) {
+    getPrompt(dropZoneElement).style.display = 'block';
+}
+
+function getPrompt(dropZoneElement) {
+    return dropZoneElement.querySelector(".drop-zone__prompt");
+}
+
+function addThumbnail(dropZoneElement, file) {
+    let thumbnail = getThumbnail(dropZoneElement);
+    if (!thumbnail) {
+        thumbnail = document.createElement("div");
+        thumbnail.classList.add("drop-zone__thumb");
+        thumbnail.classList.add("bg-primary-subtle");
+        dropZoneElement.appendChild(thumbnail);
     }
-
-    // First time - there is no thumbnail element, so lets create it
-    if (!thumbnailElement) {
-        thumbnailElement = document.createElement("div");
-        thumbnailElement.classList.add("drop-zone__thumb");
-        dropZoneElement.appendChild(thumbnailElement);
-    }
-
-    thumbnailElement.dataset.label = file.name;
+    thumbnail.dataset.label = file.name;
 
     // Show thumbnail for image files
     if (file.type.startsWith("image/")) {
         const reader = new FileReader();
-
         reader.readAsDataURL(file);
         reader.onload = () => {
-            thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
+            thumbnail.style.backgroundImage = `url('${reader.result}')`;
         };
     } else {
-        thumbnailElement.style.backgroundImage = null;
+        thumbnail.style.backgroundImage = null;
     }
+}
+
+function removeThumbnail(dropZoneElement) {
+    // getThumbnail(dropZoneElement).style.display = 'none';
+    let thumbnail = getThumbnail(dropZoneElement);
+    if (thumbnail) {
+        thumbnail.remove();
+    }
+}
+
+function getThumbnail(dropZoneElement) {
+    return dropZoneElement.querySelector(".drop-zone__thumb");
 }
