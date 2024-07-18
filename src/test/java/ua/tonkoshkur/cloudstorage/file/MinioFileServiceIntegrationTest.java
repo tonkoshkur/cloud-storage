@@ -69,7 +69,7 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
     void findAllByQuery_withNotExistedFileNameAsQuery_returnsNoFiles() {
         minioFileService.upload(USER_ID, MULTIPART_FILE, FOLDER_NAME);
 
-        List<FileDto> files = minioFileService.findAllByQuery(USER_ID, "file1");
+        List<FileDto> files = minioFileService.findAllByQuery(USER_ID, "notExistedFileName");
 
         assertThat(files).isEmpty();
     }
@@ -89,7 +89,7 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
     void findAllByFolderPath_withNotExistedFolder_returnsNoFiles() {
         minioFileService.upload(USER_ID, MULTIPART_FILE, FOLDER_NAME);
 
-        List<FileDto> files = minioFileService.findAllByFolderPath(USER_ID, FOLDER_NAME + "aaa");
+        List<FileDto> files = minioFileService.findAllByFolderPath(USER_ID, "notExistedFolder");
 
         assertThat(files).isEmpty();
     }

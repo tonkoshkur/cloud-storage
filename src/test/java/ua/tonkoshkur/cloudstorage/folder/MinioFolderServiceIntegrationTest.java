@@ -65,7 +65,7 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
     void findAllByQuery_withNotExistedFolderNameAsQuery_returnsNoFolders() {
         minioFolderService.create(USER_ID, VALID_FOLDER_NAME, PARENT_FOLDER);
 
-        List<FolderDto> folders = minioFolderService.findAllByQuery(USER_ID, "folder1");
+        List<FolderDto> folders = minioFolderService.findAllByQuery(USER_ID, "notExistedFolderName");
 
         assertThat(folders).isEmpty();
     }
@@ -85,7 +85,7 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
     void findAllByParentPath_withNotExistedParentFolder_returnsNoFolders() {
         minioFolderService.create(USER_ID, VALID_FOLDER_NAME, PARENT_FOLDER);
 
-        List<FolderDto> folders = minioFolderService.findAllByParentPath(USER_ID, PARENT_FOLDER + "aaa");
+        List<FolderDto> folders = minioFolderService.findAllByParentPath(USER_ID, "notExistedParentFolder");
 
         assertThat(folders).isEmpty();
     }
