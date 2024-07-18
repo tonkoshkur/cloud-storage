@@ -133,7 +133,7 @@ public class MinioFolderService implements FolderService {
     }
 
     private void validateName(String name) throws InvalidFolderNameException {
-        if (!name.matches(nameRegex)) {
+        if (name == null || !name.matches(nameRegex)) {
             throw new InvalidFolderNameException(name);
         }
     }
