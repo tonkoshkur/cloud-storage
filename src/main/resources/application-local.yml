@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: cloud-storage
+  datasource:
+    url: jdbc:mariadb://db:3306/cloudstorage
+    username: root
+    password: root
+  data:
+    redis:
+      host: redis
+      port: 6379
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  docker:
+    compose:
+      file: compose-local.yaml
+server:
+  tomcat:
+    max-swallow-size: -1
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  access-secret: minioadmin
+  bucket-name: user-files
+  user-folder-format: user-%s-files/
+validation:
+  name-regex: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
