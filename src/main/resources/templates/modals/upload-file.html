@@ -15,7 +15,7 @@
             </div>
 
             <form enctype="multipart/form-data"
-                  th:action="@{/file/upload}"
+                  th:action="@{/file}"
                   th:method="post">
                 <div class="modal-body" th:replace="~{partials/drag-zone (${parentFolderPath})}"></div>
                 <div class="modal-footer">

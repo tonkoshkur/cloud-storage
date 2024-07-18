@@ -21,7 +21,7 @@ public class FileController {
 
     private final FileService fileService;
 
-    @PostMapping("upload")
+    @PostMapping
     public String upload(MultipartFile file,
                          String folderPath,
                          HttpServletRequest request,
@@ -30,7 +30,7 @@ public class FileController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @GetMapping("download")
+    @GetMapping
     public ResponseEntity<InputStreamResource> download(@RequestParam String path,
                                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         InputStreamResource resource = fileService.download(userDetails.user().getId(), path);
@@ -41,7 +41,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @PutMapping("rename")
+    @PutMapping
     public String rename(String oldPath,
                          String newName,
                          HttpServletRequest request,
@@ -50,7 +50,7 @@ public class FileController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping
     public String delete(String path,
                          HttpServletRequest request,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
