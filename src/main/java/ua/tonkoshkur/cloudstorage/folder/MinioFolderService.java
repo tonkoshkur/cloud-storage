@@ -5,7 +5,6 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
 
-@Primary
 @Service
 @RequiredArgsConstructor
 public class MinioFolderService implements FolderService {

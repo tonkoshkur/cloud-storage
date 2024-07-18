@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
 
-@Primary
 @Service
 @RequiredArgsConstructor
 public class MinioFileService implements FileService {
