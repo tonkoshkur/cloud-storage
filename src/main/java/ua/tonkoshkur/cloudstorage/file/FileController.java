@@ -41,7 +41,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @PutMapping
+    @PatchMapping
     public String rename(String oldPath,
                          String newName,
                          HttpServletRequest request,

@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
 import ua.tonkoshkur.cloudstorage.util.UrlHelper;
@@ -27,7 +27,7 @@ public class FolderController {
         return UrlHelper.buildRefererRedirectUrl(request);
     }
 
-    @PutMapping
+    @PatchMapping
     public String rename(String oldPath,
                          String newName,
                          HttpServletRequest request,
