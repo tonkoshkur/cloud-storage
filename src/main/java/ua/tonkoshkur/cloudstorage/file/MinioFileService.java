@@ -64,7 +64,9 @@ public class MinioFileService implements FileService {
         if (!nameValidator.isValid(name)) {
             throw new InvalidFileNameException(name);
         }
-        throwIfExists(userId, file);
+        if (exists(userId, file)) {
+            throw new FileAlreadyExistsException(name);
+        }
 
         String fullPath = getFullPath(userId, file.path());
         minioService.uploadFile(multipartFile, fullPath);
@@ -81,12 +83,22 @@ public class MinioFileService implements FileService {
         String folderPath = PathHelper.extractParentFolder(oldPath);
         FileDto newFile = new FileDto(newName, folderPath);
         String newPath = newFile.path();
+
         if (newPath.equals(oldPath)) {
             return;
         }
-        throwIfExists(userId, newFile);
+        if (exists(userId, newFile)) {
+            throw new FileAlreadyExistsException(newName);
+        }
+
         copy(userId, oldPath, newPath);
         delete(userId, oldPath);
+    }
+
+    @SneakyThrows
+    private boolean exists(long userId, FileDto file) {
+        String fullPath = getFullPath(userId, file.path());
+        return minioService.exists(fullPath);
     }
 
     @SneakyThrows
@@ -101,14 +113,6 @@ public class MinioFileService implements FileService {
     public void delete(long userId, String filePath) {
         String fullPath = getFullPath(userId, filePath);
         minioService.delete(fullPath);
-    }
-
-    @SneakyThrows
-    private void throwIfExists(long userId, FileDto file) throws FileAlreadyExistsException {
-        String fullPath = getFullPath(userId, file.path());
-        if (minioService.exists(fullPath)) {
-            throw new FileAlreadyExistsException(file.name());
-        }
     }
 
     private String getUserFolderPath(long userId) {
