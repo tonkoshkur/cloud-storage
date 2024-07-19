@@ -41,10 +41,10 @@ services:
       MINIO_ROOT_PASSWORD: 9QOYduVpm5CI5G5UV15sjAAb
       MINIO_BUCKET_NAME: user-files
       MINIO_USER_FOLDER_FORMAT: user-%s-files/
+      MINIO_INVALID_CHARACTER_REGEX: '[\^*|\\/&";]'
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MAX_MULTIPART_FILE_SIZE: 10MB
-      FILE_AND_FOLDER_NAME_REGEX: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
     ports:
       - '8080:8080'
     depends_on:

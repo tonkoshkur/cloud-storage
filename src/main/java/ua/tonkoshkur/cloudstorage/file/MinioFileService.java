@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.tonkoshkur.cloudstorage.minio.MinioNameValidator;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
@@ -23,9 +24,7 @@ public class MinioFileService implements FileService {
 
     private final MinioService minioService;
     private final MinioResultItemsToFileDtoMapper resultItemsMapper;
-
-    @Value("${validation.name-regex}")
-    private String nameRegex;
+    private final MinioNameValidator nameValidator;
 
     @Getter
     @Value("${minio.user-folder-format}")
@@ -60,9 +59,13 @@ public class MinioFileService implements FileService {
     public void upload(long userId, MultipartFile multipartFile, String folderPath)
             throws InvalidFileNameException, FileAlreadyExistsException {
         String name = multipartFile.getOriginalFilename();
-        validateName(name);
         FileDto file = new FileDto(name, folderPath);
+
+        if (!nameValidator.isValid(name)) {
+            throw new InvalidFileNameException(name);
+        }
         throwIfExists(userId, file);
+
         String fullPath = getFullPath(userId, file.path());
         minioService.uploadFile(multipartFile, fullPath);
     }
@@ -71,7 +74,10 @@ public class MinioFileService implements FileService {
     @Override
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFileNameException, FileAlreadyExistsException {
-        validateName(newName);
+        if (!nameValidator.isValid(newName)) {
+            throw new InvalidFileNameException(newName);
+        }
+
         String folderPath = PathHelper.extractParentFolder(oldPath);
         FileDto newFile = new FileDto(newName, folderPath);
         String newPath = newFile.path();
@@ -102,12 +108,6 @@ public class MinioFileService implements FileService {
         String fullPath = getFullPath(userId, file.path());
         if (minioService.exists(fullPath)) {
             throw new FileAlreadyExistsException(file.name());
-        }
-    }
-
-    private void validateName(String name) throws InvalidFileNameException {
-        if (name == null || !name.matches(nameRegex)) {
-            throw new InvalidFileNameException(name);
         }
     }
 

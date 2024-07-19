@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ua.tonkoshkur.cloudstorage.minio.MinioNameValidator;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
@@ -21,9 +22,7 @@ public class MinioFolderService implements FolderService {
 
     private final MinioService minioService;
     private final MinioResultItemsToFolderDtoMapper resultItemsMapper;
-
-    @Value("${validation.name-regex}")
-    private String nameRegex;
+    private final MinioNameValidator nameValidator;
 
     @Value("${minio.user-folder-format}")
     private String userFolderFormat;
@@ -49,8 +48,11 @@ public class MinioFolderService implements FolderService {
     @Override
     public void create(long userId, String name, String parentFolderPath)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
-        validateName(name);
         FolderDto folder = new FolderDto(name, parentFolderPath);
+
+        if (!nameValidator.isValid(name)) {
+            throw new InvalidFolderNameException(name);
+        }
         throwIfExists(userId, folder);
         String fullPath = getFullPath(userId, folder.path());
         minioService.createFolder(fullPath);
@@ -60,7 +62,10 @@ public class MinioFolderService implements FolderService {
     @Override
     public void rename(long userId, String oldPath, String newName)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
-        validateName(newName);
+        if (!nameValidator.isValid(newName)) {
+            throw new InvalidFolderNameException(newName);
+        }
+
         String parentFolderPath = PathHelper.extractParentFolder(oldPath);
         FolderDto newFolder = new FolderDto(newName, parentFolderPath);
         String newPath = newFolder.path();
@@ -101,12 +106,6 @@ public class MinioFolderService implements FolderService {
         String fullPath = getFullPath(userId, folder.path());
         if (minioService.exists(fullPath)) {
             throw new FolderAlreadyExistsException(folder.name());
-        }
-    }
-
-    private void validateName(String name) throws InvalidFolderNameException {
-        if (name == null || !name.matches(nameRegex)) {
-            throw new InvalidFolderNameException(name);
         }
     }
 

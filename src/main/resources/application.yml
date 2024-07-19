@@ -26,5 +26,4 @@ minio:
   access-secret: ${MINIO_ACCESS_SECRET}
   bucket-name: ${MINIO_BUCKET_NAME}
   user-folder-format: ${MINIO_USER_FOLDER_FORMAT}
-validation:
-  name-regex: ${FILE_AND_FOLDER_NAME_REGEX}
+  invalid-character-regex: ${MINIO_INVALID_CHARACTER_REGEX}

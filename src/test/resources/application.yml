@@ -11,5 +11,4 @@ spring:
 minio:
   bucket-name: user-files
   user-folder-format: user-%s-files/
-validation:
-  name-regex: ^[a-zA-Z0-9-_.\'А-Яа-яҐЄІЇєії]+$
+  invalid-character-regex: '[\^*|\\/&";]'
