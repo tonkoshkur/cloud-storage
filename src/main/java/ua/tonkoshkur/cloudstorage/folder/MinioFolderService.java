@@ -20,6 +20,7 @@ import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
 public class MinioFolderService implements FolderService {
 
     private final MinioService minioService;
+    private final MinioResultItemsToFolderDtoMapper resultItemsMapper;
 
     @Value("${validation.name-regex}")
     private String nameRegex;
@@ -32,7 +33,7 @@ public class MinioFolderService implements FolderService {
     public List<FolderDto> findAllByQuery(long userId, String query) {
         String userFolderPath = getUserFolderPath(userId);
         Iterable<Result<Item>> results = minioService.findAll(userFolderPath, true);
-        return mapResultItemsToFolders(results, userId, query);
+        return resultItemsMapper.map(results, userFolderPath, query);
     }
 
     @SneakyThrows
@@ -41,34 +42,7 @@ public class MinioFolderService implements FolderService {
         String userFolderPath = getUserFolderPath(userId);
         String prefix = parentFolderPath == null ? userFolderPath : getFullPath(userId, parentFolderPath);
         Iterable<Result<Item>> results = minioService.findAll(prefix, false);
-        return mapResultItemsToFolders(results, userId, null);
-    }
-
-    @SneakyThrows
-    private List<FolderDto> mapResultItemsToFolders(Iterable<Result<Item>> results, long userId, @Nullable String query) {
-        List<FolderDto> folders = new ArrayList<>();
-        for (Result<Item> result : results) {
-            Item item = result.get();
-            if (skipResultItem(item, userId, query)) {
-                continue;
-            }
-            String path = getShortPath(userId, item.objectName());
-            folders.add(new FolderDto(
-                    PathHelper.extractName(path),
-                    PathHelper.extractParentFolder(path)));
-        }
-        return folders;
-    }
-
-    private boolean skipResultItem(Item item, long userId, @Nullable String query) {
-        if (query == null && !item.isDir()) {
-            return true;
-        }
-        String fullPath = item.objectName();
-        if (query != null && !getShortPath(userId, fullPath).contains(query)) {
-            return true;
-        }
-        return !fullPath.endsWith(PATH_SEPARATOR) || getUserFolderPath(userId).equals(fullPath);
+        return resultItemsMapper.map(results, userFolderPath, null);
     }
 
     @SneakyThrows
@@ -138,11 +112,6 @@ public class MinioFolderService implements FolderService {
 
     private String getFullPath(long userId, String path) {
         return getUserFolderPath(userId) + path + PATH_SEPARATOR;
-    }
-
-    private String getShortPath(long userId, String fullPath) {
-        String userFolderPath = getUserFolderPath(userId);
-        return fullPath.substring(userFolderPath.length(), fullPath.length() - 1);
     }
 
     private String getUserFolderPath(long userId) {
