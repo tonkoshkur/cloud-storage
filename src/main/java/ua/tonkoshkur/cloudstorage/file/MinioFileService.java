@@ -13,7 +13,6 @@ import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
@@ -23,6 +22,7 @@ import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
 public class MinioFileService implements FileService {
 
     private final MinioService minioService;
+    private final MinioResultItemsToFileDtoMapper resultItemsMapper;
 
     @Value("${validation.name-regex}")
     private String nameRegex;
@@ -36,7 +36,7 @@ public class MinioFileService implements FileService {
     public List<FileDto> findAllByQuery(long userId, String query) {
         String userFolderPath = getUserFolderPath(userId);
         Iterable<Result<Item>> results = minioService.findAll(userFolderPath, true);
-        return mapResultsToFiles(results, userId, query);
+        return resultItemsMapper.map(results, userFolderPath, query);
     }
 
     @SneakyThrows
@@ -45,29 +45,7 @@ public class MinioFileService implements FileService {
         String userFolderPath = getUserFolderPath(userId);
         String prefix = folderPath == null ? userFolderPath : userFolderPath + folderPath + PATH_SEPARATOR;
         Iterable<Result<Item>> results = minioService.findAll(prefix, false);
-        return mapResultsToFiles(results, userId, null);
-    }
-
-    @SneakyThrows
-    private List<FileDto> mapResultsToFiles(Iterable<Result<Item>> results, long userId, @Nullable String query) {
-        List<FileDto> folders = new ArrayList<>();
-        for (Result<Item> result : results) {
-            String path = getShortPath(userId, result.get().objectName());
-            if (skipResultItem(path, query)) {
-                continue;
-            }
-            folders.add(new FileDto(
-                    PathHelper.extractName(path),
-                    PathHelper.extractParentFolder(path)));
-        }
-        return folders;
-    }
-
-    private boolean skipResultItem(String path, @Nullable String query) {
-        if (query != null && !path.contains(query)) {
-            return true;
-        }
-        return path.endsWith(PATH_SEPARATOR);
+        return resultItemsMapper.map(results, userFolderPath, null);
     }
 
     @SneakyThrows
@@ -139,10 +117,5 @@ public class MinioFileService implements FileService {
 
     private String getFullPath(long userId, String path) {
         return getUserFolderPath(userId) + path;
-    }
-
-    private String getShortPath(long userId, String fullPath) {
-        String userFolderPath = getUserFolderPath(userId);
-        return fullPath.replaceFirst(userFolderPath, "");
     }
 }
