@@ -17,7 +17,7 @@ public final class PathHelper {
     }
 
     @Nullable
-    public static String extractParentFolder(String path) {
+    public static String extractParentFolder(@Nullable String path) {
         if (path == null || !path.contains(PATH_SEPARATOR)) {
             return null;
         }

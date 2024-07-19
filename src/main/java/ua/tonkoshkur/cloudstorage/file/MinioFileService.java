@@ -40,10 +40,14 @@ public class MinioFileService implements FileService {
 
     @SneakyThrows
     @Override
-    public List<FileDto> findAllByFolderPath(long userId, String folderPath) {
+    public List<FileDto> findAllByFolderPath(long userId, @Nullable String folderPath) {
         String userFolderPath = getUserFolderPath(userId);
-        String prefix = folderPath == null ? userFolderPath : userFolderPath + folderPath + PATH_SEPARATOR;
+        String prefix = folderPath == null
+                ? userFolderPath
+                : userFolderPath + folderPath + PATH_SEPARATOR;
+
         Iterable<Result<Item>> results = minioService.findAll(prefix, false);
+
         return resultItemsMapper.map(results, userFolderPath, null);
     }
 
@@ -56,7 +60,7 @@ public class MinioFileService implements FileService {
 
     @SneakyThrows
     @Override
-    public void upload(long userId, MultipartFile multipartFile, String folderPath)
+    public void upload(long userId, MultipartFile multipartFile, @Nullable String folderPath)
             throws InvalidFileNameException, FileAlreadyExistsException {
         String name = multipartFile.getOriginalFilename();
         FileDto file = new FileDto(name, folderPath);

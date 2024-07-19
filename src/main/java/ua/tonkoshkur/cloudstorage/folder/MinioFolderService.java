@@ -37,16 +37,20 @@ public class MinioFolderService implements FolderService {
 
     @SneakyThrows
     @Override
-    public List<FolderDto> findAllByParentPath(long userId, String parentFolderPath) {
+    public List<FolderDto> findAllByParentPath(long userId, @Nullable String parentFolderPath) {
         String userFolderPath = getUserFolderPath(userId);
-        String prefix = parentFolderPath == null ? userFolderPath : getFullPath(userId, parentFolderPath);
+        String prefix = parentFolderPath == null
+                ? userFolderPath
+                : getFullPath(userId, parentFolderPath);
+
         Iterable<Result<Item>> results = minioService.findAll(prefix, false);
+
         return resultItemsMapper.map(results, userFolderPath, null);
     }
 
     @SneakyThrows
     @Override
-    public void create(long userId, String name, String parentFolderPath)
+    public void create(long userId, String name, @Nullable String parentFolderPath)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
         FolderDto folder = new FolderDto(name, parentFolderPath);
 
