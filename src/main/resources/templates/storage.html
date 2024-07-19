@@ -46,7 +46,7 @@
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb" class="flex-grow-1">
                 <ol class="breadcrumb m-0">
-                    <li th:class="${breadcrumbs == null ? 'breadcrumb-item active' : 'breadcrumb-item'}">
+                    <li th:class="|breadcrumb-item ${breadcrumbs == null ? 'active' : ''}|">
                         <a class="text-decoration-none bi bi-house fs-4"
                            th:href="@{/}"></a>
                     </li>
@@ -81,7 +81,7 @@
         <ul class="list-group list-group-flush">
             <!-- Parent folder button -->
             <li class="list-group-item"
-                th:if="${path != null}">
+                th:if="${path}">
                 <a class="bi bi-arrow-90deg-left stretched-link"
                    th:href="${parentFolderPath} ? @{/(path=${parentFolderPath})} : @{/}"></a>
             </li>
@@ -171,7 +171,6 @@
         <button aria-label="Close"
                 class="btn-close"
                 data-bs-dismiss="toast"
-                onclick="location.href=location.href.replace(/[?&]?error=([^&]$|[^&]*)/i, '')"
                 type="button">
         </button>
     </div>
