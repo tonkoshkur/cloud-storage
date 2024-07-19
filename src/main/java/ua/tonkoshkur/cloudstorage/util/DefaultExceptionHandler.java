@@ -1,5 +1,6 @@
 package ua.tonkoshkur.cloudstorage.util;
 
+import io.minio.errors.ErrorResponseException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,8 @@ import ua.tonkoshkur.cloudstorage.folder.InvalidFolderNameException;
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
+    private static final String ERROR_PARAM = "error";
+
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
@@ -22,12 +25,17 @@ public class DefaultExceptionHandler {
             InvalidFileNameException.class,
             InvalidFolderNameException.class})
     public String handleCustomException(Exception e, HttpServletRequest request) {
-        return UrlHelper.buildRefererRedirectUrlWithParam(request, "error", e.getMessage());
+        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM, e.getMessage());
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxUploadSizeExceededException(HttpServletRequest request) {
-        return UrlHelper.buildRefererRedirectUrlWithParam(request, "error",
+        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM,
                 "File size must less than " + maxFileSize);
+    }
+
+    @ExceptionHandler(ErrorResponseException.class)
+    public String handleMinioErrorResponseException(HttpServletRequest request) {
+        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM, "Resource not found");
     }
 }
