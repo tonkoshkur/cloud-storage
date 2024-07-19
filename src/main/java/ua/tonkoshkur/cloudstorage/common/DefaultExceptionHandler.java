@@ -1,4 +1,4 @@
-package ua.tonkoshkur.cloudstorage.util;
+package ua.tonkoshkur.cloudstorage.common;
 
 import io.minio.errors.ErrorResponseException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +12,7 @@ import ua.tonkoshkur.cloudstorage.file.FileAlreadyExistsException;
 import ua.tonkoshkur.cloudstorage.file.InvalidFileNameException;
 import ua.tonkoshkur.cloudstorage.folder.FolderAlreadyExistsException;
 import ua.tonkoshkur.cloudstorage.folder.InvalidFolderNameException;
+import ua.tonkoshkur.cloudstorage.util.RedirectHelper;
 
 @ControllerAdvice
 public class DefaultExceptionHandler {
