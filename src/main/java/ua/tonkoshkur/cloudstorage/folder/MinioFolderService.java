@@ -53,7 +53,10 @@ public class MinioFolderService implements FolderService {
         if (!nameValidator.isValid(name)) {
             throw new InvalidFolderNameException(name);
         }
-        throwIfExists(userId, folder);
+        if (exists(userId, folder)) {
+            throw new FolderAlreadyExistsException(name);
+        }
+
         String fullPath = getFullPath(userId, folder.path());
         minioService.createFolder(fullPath);
     }
@@ -69,12 +72,22 @@ public class MinioFolderService implements FolderService {
         String parentFolderPath = PathHelper.extractParentFolder(oldPath);
         FolderDto newFolder = new FolderDto(newName, parentFolderPath);
         String newPath = newFolder.path();
+
         if (newPath.equals(oldPath)) {
             return;
         }
-        throwIfExists(userId, newFolder);
+        if (exists(userId, newFolder)) {
+            throw new FolderAlreadyExistsException(newName);
+        }
+
         copy(userId, oldPath, newPath);
         delete(userId, oldPath);
+    }
+
+    @SneakyThrows
+    private boolean exists(long userId, FolderDto folder) {
+        String fullPath = getFullPath(userId, folder.path());
+        return minioService.exists(fullPath);
     }
 
     @SneakyThrows
@@ -99,14 +112,6 @@ public class MinioFolderService implements FolderService {
             paths.add(resultItem.get().objectName());
         }
         minioService.deleteAll(paths);
-    }
-
-    @SneakyThrows
-    private void throwIfExists(long userId, FolderDto folder) {
-        String fullPath = getFullPath(userId, folder.path());
-        if (minioService.exists(fullPath)) {
-            throw new FolderAlreadyExistsException(folder.name());
-        }
     }
 
     private String getFullPath(long userId, String path) {
