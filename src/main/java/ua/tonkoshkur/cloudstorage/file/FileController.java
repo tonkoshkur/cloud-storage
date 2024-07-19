@@ -10,9 +10,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
-import ua.tonkoshkur.cloudstorage.util.UrlHelper;
+import ua.tonkoshkur.cloudstorage.util.RedirectHelper;
 
 @RequestMapping("file")
 @Controller
@@ -22,12 +23,12 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping
-    public String upload(MultipartFile file,
-                         String folderPath,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView upload(MultipartFile file,
+                               String folderPath,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         fileService.upload(userDetails.user().getId(), file, folderPath);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @GetMapping
@@ -42,19 +43,19 @@ public class FileController {
     }
 
     @PatchMapping
-    public String rename(String oldPath,
-                         String newName,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView rename(String oldPath,
+                               String newName,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         fileService.rename(userDetails.user().getId(), oldPath, newName);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @DeleteMapping
-    public String delete(String path,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView delete(String path,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         fileService.delete(userDetails.user().getId(), path);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 }

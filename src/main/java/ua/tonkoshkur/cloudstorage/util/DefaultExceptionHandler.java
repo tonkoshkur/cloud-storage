@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import ua.tonkoshkur.cloudstorage.file.FileAlreadyExistsException;
 import ua.tonkoshkur.cloudstorage.file.InvalidFileNameException;
 import ua.tonkoshkur.cloudstorage.folder.FolderAlreadyExistsException;
@@ -24,18 +26,24 @@ public class DefaultExceptionHandler {
             FolderAlreadyExistsException.class,
             InvalidFileNameException.class,
             InvalidFolderNameException.class})
-    public String handleCustomException(Exception e, HttpServletRequest request) {
-        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM, e.getMessage());
+    public RedirectView handleCustomException(Exception e,
+                                              HttpServletRequest request,
+                                              RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(ERROR_PARAM, e.getMessage());
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public String handleMaxUploadSizeExceededException(HttpServletRequest request) {
-        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM,
-                "File size must less than " + maxFileSize);
+    public RedirectView handleMaxUploadSizeExceededException(HttpServletRequest request,
+                                                             RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(ERROR_PARAM, "File size must less than " + maxFileSize);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @ExceptionHandler(ErrorResponseException.class)
-    public String handleMinioErrorResponseException(HttpServletRequest request) {
-        return UrlHelper.buildRefererRedirectUrlWithParam(request, ERROR_PARAM, "Resource not found");
+    public RedirectView handleMinioErrorResponseException(HttpServletRequest request,
+                                                          RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(ERROR_PARAM, "Resource not found");
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 }

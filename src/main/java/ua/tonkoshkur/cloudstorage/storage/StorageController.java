@@ -22,11 +22,9 @@ public class StorageController {
 
     @GetMapping
     public String storagePage(@RequestParam(required = false) String path,
-                              @RequestParam(required = false) String error,
                               Model model,
                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         model.addAttribute("path", path);
-        model.addAttribute("error", error);
 
         StorageContentDto content = storageService.findContentByPath(userDetails.user().getId(), path);
         model.addAttribute("content", content);
@@ -50,11 +48,9 @@ public class StorageController {
 
     @GetMapping("search")
     public String search(@RequestParam String query,
-                         @RequestParam(required = false) String error,
                          Model model,
                          @AuthenticationPrincipal CustomUserDetails userDetails) {
         model.addAttribute("query", query);
-        model.addAttribute("error", error);
 
         StorageContentDto content = storageService.findContentByName(userDetails.user().getId(), query);
         model.addAttribute("content", content);

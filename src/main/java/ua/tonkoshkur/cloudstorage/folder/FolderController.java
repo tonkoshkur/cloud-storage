@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import ua.tonkoshkur.cloudstorage.user.CustomUserDetails;
-import ua.tonkoshkur.cloudstorage.util.UrlHelper;
+import ua.tonkoshkur.cloudstorage.util.RedirectHelper;
 
 @RequestMapping("folder")
 @Controller
@@ -19,28 +20,28 @@ public class FolderController {
     private final FolderService folderService;
 
     @PostMapping
-    public String create(String name,
-                         String parentFolderPath,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView create(String name,
+                               String parentFolderPath,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         folderService.create(userDetails.user().getId(), name, parentFolderPath);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @PatchMapping
-    public String rename(String oldPath,
-                         String newName,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView rename(String oldPath,
+                               String newName,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         folderService.rename(userDetails.user().getId(), oldPath, newName);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 
     @DeleteMapping
-    public String delete(String path,
-                         HttpServletRequest request,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public RedirectView delete(String path,
+                               HttpServletRequest request,
+                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         folderService.delete(userDetails.user().getId(), path);
-        return UrlHelper.buildRefererRedirectUrl(request);
+        return RedirectHelper.buildRefererRedirectView(request);
     }
 }
