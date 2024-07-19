@@ -54,7 +54,7 @@
                         th:if="${breadcrumbs}"
                         th:each="breadcrumb : ${breadcrumbs}">
                         <a class="text-decoration-none"
-                           th:href="|@{/?path=}${breadcrumb.path()}|"
+                           th:href="@{/(path=${breadcrumb.path()})}"
                            th:text="${breadcrumb.label()}"
                            th:unless="${breadcrumb.active()}"></a>
                         <span th:if="${breadcrumb.active()}"
@@ -83,7 +83,7 @@
             <li class="list-group-item"
                 th:if="${path != null}">
                 <a class="bi bi-arrow-90deg-left stretched-link"
-                   th:href="|@{/}${parentFolderPath == null ? '' : '?path=' + parentFolderPath}|"></a>
+                   th:href="${parentFolderPath} ? @{/(path=${parentFolderPath})} : @{/}"></a>
             </li>
 
             <!-- Folders -->
@@ -91,14 +91,14 @@
                 th:each="folder,status : ${content.folders()}">
                 <i class="bi bi-folder me-3 text-primary"></i>
                 <a class="flex-grow-1 text-decoration-none text-truncate"
-                   th:href="|@{/?path=}${folder.path()}|"
+                   th:href="@{/(path=${folder.path()})}"
                    th:text="${query == null ? folder.name() : folder.path()}"></a>
 
                 <!-- Open parent folder button -->
                 <a class="btn text-primary bi bi-arrow-90deg-up"
                    th:if="${query}"
                    th:with="parentPath = ${folder.parentFolderPath()}"
-                   th:href="|@{/}${parentPath == null ? '' : '?path=' + parentPath}|"></a>
+                   th:href="${parentPath} ? @{/(path=${parentPath})} : @{/}"></a>
 
                 <!-- Rename button -->
                 <div th:replace="~{modals/rename-folder :: renamefolder(${folder},${status.index})}"></div>
@@ -128,13 +128,13 @@
 
                 <!-- Download button -->
                 <a class="btn text-primary bi bi-download"
-                   th:href="|@{/file?path=}${file.path()}|"></a>
+                   th:href="@{/file(path=${file.path()})}"></a>
 
                 <!-- Open folder button -->
                 <a class="btn text-primary bi bi-folder-symlink"
                    th:if="${query}"
                    th:with="folderPath = ${file.folderPath()}"
-                   th:href="|@{/}${folderPath == null ? '' : '?path=' + folderPath}|"></a>
+                   th:href="${folderPath} ? @{/(path=${folderPath})} : @{/}"></a>
 
                 <!-- Rename button -->
                 <div th:replace="~{modals/rename-file :: renamefile(${file},${status.index})}"></div>
