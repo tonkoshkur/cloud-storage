@@ -29,4 +29,4 @@ minio:
   access-secret: minioadmin
   bucket-name: user-files
   user-folder-format: user-%s-files/
-  invalid-character-regex: '[\^*|\\/&";]'
+  invalid-character-regex: '.*[\\^*|\\\\/&\";].*'
