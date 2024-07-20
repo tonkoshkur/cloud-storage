@@ -16,28 +16,31 @@ import static ua.tonkoshkur.cloudstorage.util.PathHelper.PATH_SEPARATOR;
 public class MinioResultItemsToFileDtoMapper {
 
     @SneakyThrows
-    public List<FileDto> map(Iterable<Result<Item>> results, String userFolderPath, @Nullable String query) {
-        List<FileDto> folders = new ArrayList<>();
+    public List<FileDto> map(Iterable<Result<Item>> results, String userFolderPath) {
+        List<FileDto> files = new ArrayList<>();
         for (Result<Item> result : results) {
-            String path = getShortPath(userFolderPath, result.get().objectName());
-            if (shouldSkipResultItem(path, query)) {
+            Item item = result.get();
+            if (isFolder(item)) {
                 continue;
             }
-            folders.add(new FileDto(
-                    PathHelper.extractName(path),
-                    PathHelper.extractParentFolder(path)));
+            FileDto file = map(item, userFolderPath);
+            files.add(file);
         }
-        return folders;
+        return files;
+    }
+
+    private FileDto map(Item item, String userFolderPath) {
+        String path = getShortPath(userFolderPath, item.objectName());
+        return new FileDto(
+                PathHelper.extractName(path),
+                PathHelper.extractParentFolder(path));
     }
 
     private String getShortPath(String userFolderPath, String fullPath) {
         return fullPath.replaceFirst(userFolderPath, "");
     }
 
-    private boolean shouldSkipResultItem(String path, @Nullable String query) {
-        if (query != null && !path.contains(query)) {
-            return true;
-        }
-        return path.endsWith(PATH_SEPARATOR);
+    private boolean isFolder(Item item) {
+        return item.objectName().endsWith(PATH_SEPARATOR);
     }
 }
