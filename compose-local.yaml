@@ -6,7 +6,7 @@ services:
     image: mariadb:latest
     environment:
       MARIADB_DATABASE: cloudstorage
-      MARIADB_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
       MARIADB_USER: root
     ports:
       - '3306'
