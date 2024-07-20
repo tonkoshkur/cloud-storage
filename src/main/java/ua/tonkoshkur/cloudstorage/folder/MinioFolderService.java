@@ -32,7 +32,10 @@ public class MinioFolderService implements FolderService {
     public List<FolderDto> findAllByQuery(long userId, String query) {
         String userFolderPath = getUserFolderPath(userId);
         Iterable<Result<Item>> results = minioService.findAll(userFolderPath, true);
-        return resultItemsMapper.map(results, userFolderPath, query);
+        return resultItemsMapper.map(results, userFolderPath)
+                .stream()
+                .filter(folder -> StringUtils.containsIgnoreCase(folder.name(), query))
+                .toList();
     }
 
     @SneakyThrows
@@ -45,7 +48,10 @@ public class MinioFolderService implements FolderService {
 
         Iterable<Result<Item>> results = minioService.findAll(prefix, false);
 
-        return resultItemsMapper.map(results, userFolderPath, null);
+        return resultItemsMapper.map(results, userFolderPath)
+                .stream()
+                .filter(folder -> !folder.path().equals(parentFolderPath))
+                .toList();
     }
 
     @SneakyThrows
