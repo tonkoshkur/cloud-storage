@@ -35,7 +35,7 @@
                        th:value="${query}"
                        type="text">
                 <a class="btn-close mx-2" th:href="@{/}" title="Clear"></a>
-                <button class="btn btn-primary" type="submit">
+                <button class="btn btn-link fs-5" type="submit">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
@@ -62,16 +62,16 @@
             </nav>
 
             <!-- Add folder, upload file buttons -->
-            <div class="d-flex gap-3" th:unless="${query}">
+            <div class="d-flex" th:unless="${query}">
                 <div th:replace="~{modals/create-folder (${path})}"></div>
                 <div th:replace="~{modals/upload-file (${path})}"></div>
-                <button class="btn btn-primary" data-bs-target="#createFolderModal" data-bs-toggle="modal"
+                <button class="btn btn-link" data-bs-target="#createFolderModal" data-bs-toggle="modal"
                         type="button">
-                    <i class="bi bi-folder-plus"></i>
+                    <i class="bi bi-folder-plus fs-5"></i>
                 </button>
-                <button class="btn btn-primary" data-bs-target="#uploadFileModal" data-bs-toggle="modal"
+                <button class="btn btn-link" data-bs-target="#uploadFileModal" data-bs-toggle="modal"
                         type="button">
-                    <i class="bi bi-file-earmark-plus"></i>
+                    <i class="bi bi-file-earmark-plus fs-5"></i>
                 </button>
             </div>
         </div>
