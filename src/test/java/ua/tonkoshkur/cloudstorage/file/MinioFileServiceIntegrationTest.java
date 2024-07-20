@@ -3,6 +3,7 @@ package ua.tonkoshkur.cloudstorage.file;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,6 +17,7 @@ import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +34,9 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
     private static final FileDto FILE = new FileDto(
             FILE_NAME,
             FOLDER_NAME,
-            FILE_PATH);
+            FILE_PATH,
+            FileUtils.byteCountToDisplaySize(MULTIPART_FILE.getSize()),
+            null);
 
     @Autowired
     MinioFileService minioFileService;
@@ -58,6 +62,8 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
 
         assertThat(files)
                 .singleElement()
+                .usingRecursiveComparison()
+                .ignoringFieldsOfTypes(LocalDateTime.class)
                 .isEqualTo(FILE);
     }
 
@@ -87,6 +93,8 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
 
         assertThat(files)
                 .singleElement()
+                .usingRecursiveComparison()
+                .ignoringFieldsOfTypes(LocalDateTime.class)
                 .isEqualTo(FILE);
     }
 
@@ -126,7 +134,7 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
     void rename_withExistedFileName_throwsFileAlreadyExistsException() {
         String newName = "fileToRename";
         String path = PathHelper.buildPath(newName, FOLDER_NAME);
-        FileDto fileToRename = new FileDto(newName, FOLDER_NAME, path);
+        FileDto fileToRename = new FileDto(newName, FOLDER_NAME, path, null, null);
         MockMultipartFile multipartFileToRename
                 = new MockMultipartFile(fileToRename.name(), fileToRename.name(), null, new byte[]{});
         minioFileService.upload(USER_ID, multipartFileToRename, fileToRename.folderPath());

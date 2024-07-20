@@ -18,7 +18,7 @@
 </nav>
 
 <div class="container d-flex justify-content-center gap-3 my-4"
-     style="max-width: 50rem">
+     style="max-width: 80rem">
     <div class="container">
 
         <!-- Search -->
@@ -80,7 +80,9 @@
             <!-- Headers -->
             <div class="row text-body-tertiary border-bottom">
                 <strong class="col">Name</strong>
-                <strong class="col-3">Actions</strong>
+                <strong class="col-1">Size</strong>
+                <strong class="col-2">Modified</strong>
+                <strong class="col-2">Actions</strong>
             </div>
 
             <!-- Parent folder button -->
@@ -103,7 +105,10 @@
                        th:text="${query == null ? folder.name() : folder.path()}"></a>
                 </div>
 
-                <div class="col-3 d-flex justify-content-center">
+                <div class="col-1 text-dark-emphasis">-</div>
+                <div class="col-2 text-dark-emphasis">-</div>
+
+                <div class="col2 d-flex justify-content-center">
                     <!-- Download button -->
                     <a class="btn btn-link bi bi-download opacity-0 disabled"></a>
 
@@ -144,7 +149,19 @@
                          th:text="${query == null ? file.name() : file.path()}"></div>
                 </div>
 
-                <div class="col-3 d-flex justify-content-center">
+                <!-- Size -->
+                <div class="col-1">
+                    <div class="text-dark-emphasis"
+                         th:text="${file.size()}"></div>
+                </div>
+
+                <!-- Modified -->
+                <div class="col-2">
+                    <div class="text-dark-emphasis"
+                         th:text="${#temporals.format(file.modifiedAt(), 'dd-MM-yyyy HH:mm')}"></div>
+                </div>
+
+                <div class="col-2 d-flex justify-content-center">
                     <!-- Download button -->
                     <a class="btn btn-link bi bi-download"
                        th:href="@{/file(path=${file.path()})}"></a>

@@ -3,6 +3,7 @@ package ua.tonkoshkur.cloudstorage.file;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
@@ -33,7 +34,9 @@ public class MinioResultItemsToFileDtoMapper {
         return new FileDto(
                 PathHelper.extractName(path),
                 PathHelper.extractParentFolder(path),
-                path);
+                path,
+                FileUtils.byteCountToDisplaySize(item.size()),
+                item.lastModified().toLocalDateTime());
     }
 
     private String getShortPath(String userFolderPath, String fullPath) {
