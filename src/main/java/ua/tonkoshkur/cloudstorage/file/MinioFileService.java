@@ -67,16 +67,16 @@ public class MinioFileService implements FileService {
     public void upload(long userId, MultipartFile multipartFile, @Nullable String folderPath)
             throws InvalidFileNameException, FileAlreadyExistsException {
         String name = multipartFile.getOriginalFilename();
-        FileDto file = new FileDto(name, folderPath);
+        String path = PathHelper.buildPath(name, folderPath);
 
         if (!nameValidator.isValid(name)) {
             throw new InvalidFileNameException(name);
         }
-        if (exists(userId, file)) {
+        if (exists(userId, path)) {
             throw new FileAlreadyExistsException(name);
         }
 
-        String fullPath = getFullPath(userId, file.path());
+        String fullPath = getFullPath(userId, path);
         minioService.uploadFile(multipartFile, fullPath);
     }
 
@@ -89,13 +89,12 @@ public class MinioFileService implements FileService {
         }
 
         String folderPath = PathHelper.extractParentFolder(oldPath);
-        FileDto newFile = new FileDto(newName, folderPath);
-        String newPath = newFile.path();
+        String newPath = PathHelper.buildPath(newName, folderPath);
 
         if (newPath.equals(oldPath)) {
             return;
         }
-        if (exists(userId, newFile)) {
+        if (exists(userId, newPath)) {
             throw new FileAlreadyExistsException(newName);
         }
 
@@ -104,8 +103,8 @@ public class MinioFileService implements FileService {
     }
 
     @SneakyThrows
-    private boolean exists(long userId, FileDto file) {
-        String fullPath = getFullPath(userId, file.path());
+    private boolean exists(long userId, String path) {
+        String fullPath = getFullPath(userId, path);
         return minioService.exists(fullPath);
     }
 

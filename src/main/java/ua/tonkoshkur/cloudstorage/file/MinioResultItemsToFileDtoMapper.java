@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,8 @@ public class MinioResultItemsToFileDtoMapper {
         String path = getShortPath(userFolderPath, item.objectName());
         return new FileDto(
                 PathHelper.extractName(path),
-                PathHelper.extractParentFolder(path));
+                PathHelper.extractParentFolder(path),
+                path);
     }
 
     private String getShortPath(String userFolderPath, String fullPath) {

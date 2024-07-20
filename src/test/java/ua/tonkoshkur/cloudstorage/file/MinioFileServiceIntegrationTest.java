@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
+import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
 import java.util.List;
 
@@ -25,9 +26,13 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
     private static final long USER_ID = 1;
     private static final String FILE_NAME = "file";
     private static final String FOLDER_NAME = "folder";
-    private static final FileDto FILE = new FileDto(FILE_NAME, FOLDER_NAME);
+    private static final String FILE_PATH = PathHelper.buildPath(FILE_NAME, FOLDER_NAME);
     private static final MultipartFile MULTIPART_FILE =
             new MockMultipartFile(FILE_NAME, FILE_NAME, null, (byte[]) null);
+    private static final FileDto FILE = new FileDto(
+            FILE_NAME,
+            FOLDER_NAME,
+            FILE_PATH);
 
     @Autowired
     MinioFileService minioFileService;
@@ -119,7 +124,9 @@ class MinioFileServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void rename_withExistedFileName_throwsFileAlreadyExistsException() {
-        FileDto fileToRename = new FileDto("fileToRename", FOLDER_NAME);
+        String newName = "fileToRename";
+        String path = PathHelper.buildPath(newName, FOLDER_NAME);
+        FileDto fileToRename = new FileDto(newName, FOLDER_NAME, path);
         MockMultipartFile multipartFileToRename
                 = new MockMultipartFile(fileToRename.name(), fileToRename.name(), null, new byte[]{});
         minioFileService.upload(USER_ID, multipartFileToRename, fileToRename.folderPath());

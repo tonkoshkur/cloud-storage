@@ -4,6 +4,7 @@ import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ua.tonkoshkur.cloudstorage.minio.MinioNameValidator;
@@ -58,16 +59,16 @@ public class MinioFolderService implements FolderService {
     @Override
     public void create(long userId, String name, @Nullable String parentFolderPath)
             throws InvalidFolderNameException, FolderAlreadyExistsException {
-        FolderDto folder = new FolderDto(name, parentFolderPath);
+        String path = PathHelper.buildPath(name, parentFolderPath);
 
         if (!nameValidator.isValid(name)) {
             throw new InvalidFolderNameException(name);
         }
-        if (exists(userId, folder)) {
+        if (exists(userId, path)) {
             throw new FolderAlreadyExistsException(name);
         }
 
-        String fullPath = getFullPath(userId, folder.path());
+        String fullPath = getFullPath(userId, path);
         minioService.createFolder(fullPath);
     }
 
@@ -80,13 +81,12 @@ public class MinioFolderService implements FolderService {
         }
 
         String parentFolderPath = PathHelper.extractParentFolder(oldPath);
-        FolderDto newFolder = new FolderDto(newName, parentFolderPath);
-        String newPath = newFolder.path();
+        String newPath = PathHelper.buildPath(newName, parentFolderPath);
 
         if (newPath.equals(oldPath)) {
             return;
         }
-        if (exists(userId, newFolder)) {
+        if (exists(userId, newPath)) {
             throw new FolderAlreadyExistsException(newName);
         }
 
@@ -95,8 +95,8 @@ public class MinioFolderService implements FolderService {
     }
 
     @SneakyThrows
-    private boolean exists(long userId, FolderDto folder) {
-        String fullPath = getFullPath(userId, folder.path());
+    private boolean exists(long userId, String path) {
+        String fullPath = getFullPath(userId, path);
         return minioService.exists(fullPath);
     }
 

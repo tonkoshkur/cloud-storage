@@ -33,7 +33,8 @@ public class MinioResultItemsToFolderDtoMapper {
         String path = getShortPath(userFolderPath, item.objectName());
         return new FolderDto(
                 PathHelper.extractName(path),
-                PathHelper.extractParentFolder(path));
+                PathHelper.extractParentFolder(path),
+                path);
     }
 
     private boolean isFile(String path) {

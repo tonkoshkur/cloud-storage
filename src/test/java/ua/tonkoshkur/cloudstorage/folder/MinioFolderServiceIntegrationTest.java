@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ua.tonkoshkur.cloudstorage.BaseIntegrationTest;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
+import ua.tonkoshkur.cloudstorage.util.PathHelper;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
     private static final long USER_ID = 1;
     private static final String VALID_FOLDER_NAME = "folder";
     private static final String PARENT_FOLDER = "parentFolder";
-    private static final FolderDto FOLDER = new FolderDto(VALID_FOLDER_NAME, PARENT_FOLDER);
+    private static final String FOLDER_PATH = PathHelper.buildPath(VALID_FOLDER_NAME, PARENT_FOLDER);
+    private static final FolderDto FOLDER = new FolderDto(VALID_FOLDER_NAME, PARENT_FOLDER, FOLDER_PATH);
 
     @Autowired
     MinioFolderService minioFolderService;
@@ -115,13 +117,11 @@ class MinioFolderServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void rename_withExistedFolderName_throwsFolderAlreadyExistsException() {
-        FolderDto folder = new FolderDto("folderToRename", PARENT_FOLDER);
+        String existedFolderName = "existedFolder";
+        minioFolderService.create(USER_ID, existedFolderName, PARENT_FOLDER);
         minioFolderService.create(USER_ID, VALID_FOLDER_NAME, PARENT_FOLDER);
-        minioFolderService.create(USER_ID, folder.name(), folder.parentFolderPath());
-
-        String oldPath = folder.path();
         assertThrows(FolderAlreadyExistsException.class,
-                () -> minioFolderService.rename(USER_ID, oldPath, VALID_FOLDER_NAME));
+                () -> minioFolderService.rename(USER_ID, FOLDER_PATH, existedFolderName));
     }
 
     @Test

@@ -26,4 +26,10 @@ public final class PathHelper {
                 ? null
                 : parentFolder;
     }
+
+    public static String buildPath(String name, @Nullable String parentFolderPath) {
+        return parentFolderPath == null
+                ? name
+                : parentFolderPath + PATH_SEPARATOR + name;
+    }
 }
