@@ -15,7 +15,7 @@
             </div>
             <form th:action="@{/folder}"
                   th:method="delete">
-                <div class="modal-body">
+                <div class="modal-body text-break">
                     <div>Do you really want to delete the folder '<span th:text="${folder.name()}"></span>'?</div>
                     <input name="path"
                            th:value="${folder.path()}"
