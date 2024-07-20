@@ -99,7 +99,7 @@
 
                 <div class="col-auto"><i class="bi bi-folder"></i></div>
 
-                <div class="col text-start position-relative">
+                <div class="col text-start position-relative overflow-x-auto">
                     <a class="flex-grow-1 text-decoration-none text-truncate stretched-link"
                        th:href="@{/(path=${folder.path()})}"
                        th:text="${query == null ? folder.name() : folder.path()}"></a>
@@ -144,10 +144,8 @@
 
                 <div class="col-auto"><i class="bi bi-file-earmark text-dark-emphasis"></i></div>
 
-                <div class="col text-start">
-                    <div class="flex-grow-1 text-truncate text-dark-emphasis"
+                <div class="col text-start flex-grow-1 text-truncate text-dark-emphasis overflow-x-auto"
                          th:text="${query == null ? file.name() : file.path()}"></div>
-                </div>
 
                 <!-- Size -->
                 <div class="col-1">
