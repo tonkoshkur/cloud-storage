@@ -73,3 +73,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    labels:
+      autoheal: "true"
+
+  autoheal:
+    image: willfarrell/autoheal
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+      - AUTOHEAL_INTERVAL=5
+      - AUTOHEAL_START_PERIOD=60
