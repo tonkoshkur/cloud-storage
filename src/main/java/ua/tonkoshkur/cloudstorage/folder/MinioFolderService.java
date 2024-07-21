@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ua.tonkoshkur.cloudstorage.common.SynchronizedOnUser;
 import ua.tonkoshkur.cloudstorage.minio.MinioNameValidator;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
@@ -55,6 +56,7 @@ public class MinioFolderService implements FolderService {
                 .toList();
     }
 
+    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void create(long userId, String name, @Nullable String parentFolderPath)
@@ -72,6 +74,7 @@ public class MinioFolderService implements FolderService {
         minioService.createFolder(fullPath);
     }
 
+    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void rename(long userId, String oldPath, String newName)
@@ -100,6 +103,7 @@ public class MinioFolderService implements FolderService {
         return minioService.exists(fullPath);
     }
 
+    @SynchronizedOnUser
     @SneakyThrows
     private void copy(long userId, String fromPath, String toPath) {
         String fromFullPath = getFullPath(userId, fromPath);
@@ -112,6 +116,7 @@ public class MinioFolderService implements FolderService {
         }
     }
 
+    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void delete(long userId, String folderPath) {
