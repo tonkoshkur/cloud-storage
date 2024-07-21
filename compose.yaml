@@ -37,8 +37,8 @@ services:
       DB_USER: root
       DB_PASSWORD: qRzuu2S4JON9BEfz5nAdMt58
       MINIO_URL: http://minio:9000
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: 9QOYduVpm5CI5G5UV15sjAAb
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_ACCESS_SECRET: 9QOYduVpm5CI5G5UV15sjAAb
       MINIO_BUCKET_NAME: user-files
       MINIO_USER_FOLDER_FORMAT: user-%s-files/
       MINIO_INVALID_CHARACTER_REGEX: '.*[\\^*|\\\\/&\";].*'
