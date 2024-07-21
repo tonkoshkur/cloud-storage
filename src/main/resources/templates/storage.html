@@ -80,9 +80,11 @@
             <!-- Headers -->
             <div class="row text-body-tertiary border-bottom">
                 <strong class="col">Name</strong>
-                <strong class="col-1">Size</strong>
-                <strong class="col-2">Modified</strong>
-                <strong class="col-2">Actions</strong>
+                <strong class="col-2">Size</strong>
+                <strong class="col-3">Modified</strong>
+                <strong class="col-auto p-0">
+                    <a class="btn btn-link bi bi-three-dots-vertical opacity-0 disabled"></a>
+                </strong>
             </div>
 
             <!-- Parent folder button -->
@@ -105,36 +107,45 @@
                        th:text="${query == null ? folder.name() : folder.path()}"></a>
                 </div>
 
-                <div class="col-1 text-dark-emphasis">-</div>
                 <div class="col-2 text-dark-emphasis">-</div>
+                <div class="col-3 text-dark-emphasis">-</div>
 
-                <div class="col2 d-flex justify-content-center">
-                    <!-- Download button -->
-                    <a class="btn btn-link bi bi-download opacity-0 disabled"></a>
-
-                    <!-- Open parent folder button -->
-                    <a class="btn btn-link bi bi-arrow-90deg-up"
-                       th:if="${query}"
-                       th:with="parentPath = ${folder.parentFolderPath()}"
-                       th:href="${parentPath} ? @{/(path=${parentPath})} : @{/}"></a>
-
-                    <!-- Rename button -->
-                    <div th:replace="~{modals/rename-folder :: renamefolder(${folder},${status.index})}"></div>
-                    <button class="btn btn-link"
-                            th:data-bs-target="|#renameFolderModal${status.index}|"
-                            data-bs-toggle="modal"
+                <!-- Actions -->
+                <div th:replace="~{modals/rename-folder :: renamefolder(${folder},${status.index})}"></div>
+                <div th:replace="~{modals/delete-folder :: deletefolder(${folder},${status.index})}"></div>
+                <div class="col-auto p-0 btn-group dropup">
+                    <button aria-expanded="false"
+                            class="btn btn-link"
+                            data-bs-toggle="dropdown"
                             type="button">
-                        <i class="bi bi-pencil"></i>
+                        <i class="bi bi-three-dots-vertical"></i>
                     </button>
+                    <ul class="dropdown-menu">
+                        <li class="d-flex justify-content-center">
 
-                    <!-- Delete button -->
-                    <div th:replace="~{modals/delete-folder :: deletefolder(${folder},${status.index})}"></div>
-                    <button class="btn text-danger"
-                            th:data-bs-target="|#deleteFolderModal${status.index}|"
-                            data-bs-toggle="modal"
-                            type="button">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                            <!-- Open parent folder button -->
+                            <a class="btn btn-link bi bi-arrow-90deg-up"
+                               th:href="${parentPath} ? @{/(path=${parentPath})} : @{/}"
+                               th:if="${query}"
+                               th:with="parentPath = ${folder.parentFolderPath()}"></a>
+
+                            <!-- Rename button -->
+                            <button class="btn btn-link"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="|#renameFolderModal${status.index}|"
+                                    type="button">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+
+                            <!-- Delete button -->
+                            <button class="btn text-danger"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="|#deleteFolderModal${status.index}|"
+                                    type="button">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -145,48 +156,56 @@
                 <div class="col-auto"><i class="bi bi-file-earmark text-dark-emphasis"></i></div>
 
                 <div class="col text-start flex-grow-1 text-truncate text-dark-emphasis overflow-x-auto"
-                         th:text="${query == null ? file.name() : file.path()}"></div>
+                     th:text="${query == null ? file.name() : file.path()}"></div>
 
                 <!-- Size -->
-                <div class="col-1">
-                    <div class="text-dark-emphasis"
-                         th:text="${file.size()}"></div>
-                </div>
+                <div class="col-2 text-dark-emphasis"
+                     th:text="${file.size()}"></div>
 
                 <!-- Modified -->
-                <div class="col-2">
-                    <div class="text-dark-emphasis"
-                         th:text="${#temporals.format(file.modifiedAt(), 'dd-MM-yyyy HH:mm')}"></div>
-                </div>
+                <div class="col-3 text-dark-emphasis"
+                     th:text="${#temporals.format(file.modifiedAt(), 'dd-MM-yyyy HH:mm')}"></div>
 
-                <div class="col-2 d-flex justify-content-center">
-                    <!-- Download button -->
-                    <a class="btn btn-link bi bi-download"
-                       th:href="@{/file(path=${file.path()})}"></a>
-
-                    <!-- Open folder button -->
-                    <a class="btn btn-link bi bi-folder-symlink"
-                       th:if="${query}"
-                       th:with="folderPath = ${file.folderPath()}"
-                       th:href="${folderPath} ? @{/(path=${folderPath})} : @{/}"></a>
-
-                    <!-- Rename button -->
-                    <div th:replace="~{modals/rename-file :: renamefile(${file},${status.index})}"></div>
-                    <button class="btn btn-link"
-                            th:data-bs-target="|#renameFileModal${status.index}|"
-                            data-bs-toggle="modal"
+                <!-- Actions -->
+                <div th:replace="~{modals/rename-file :: renamefile(${file},${status.index})}"></div>
+                <div th:replace="~{modals/delete-file :: deletefile(${file},${status.index})}"></div>
+                <div class="col-auto p-0 btn-group dropup">
+                    <button aria-expanded="false"
+                            class="btn btn-link"
+                            data-bs-toggle="dropdown"
                             type="button">
-                        <i class="bi bi-pencil"></i>
+                        <i class="bi bi-three-dots-vertical"></i>
                     </button>
+                    <ul class="dropdown-menu">
+                        <li class="d-flex justify-content-center">
 
-                    <!-- Delete button -->
-                    <div th:replace="~{modals/delete-file :: deletefile(${file},${status.index})}"></div>
-                    <button class="btn text-danger"
-                            th:data-bs-target="|#deleteFileModal${status.index}"
-                            data-bs-toggle="modal"
-                            type="button">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                            <!-- Download button -->
+                            <a class="btn btn-link bi bi-download"
+                               th:href="@{/file(path=${file.path()})}"></a>
+
+                            <!-- Open folder button -->
+                            <a class="btn btn-link bi bi-folder-symlink"
+                               th:href="${folderPath} ? @{/(path=${folderPath})} : @{/}"
+                               th:if="${query}"
+                               th:with="folderPath = ${file.folderPath()}"></a>
+
+                            <!-- Rename button -->
+                            <button class="btn btn-link"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="|#renameFileModal${status.index}|"
+                                    type="button">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+
+                            <!-- Delete button -->
+                            <button class="btn text-danger"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="|#deleteFileModal${status.index}"
+                                    type="button">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
