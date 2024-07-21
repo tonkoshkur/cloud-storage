@@ -1,0 +1,14 @@
+<div class="col-auto p-0 btn-group dropup"
+     th:fragment="dropdown (content)">
+    <button aria-expanded="false"
+            class="btn btn-link"
+            data-bs-toggle="dropdown"
+            type="button">
+        <i class="bi bi-three-dots-vertical"></i>
+    </button>
+    <ul class="dropdown-menu p-0" style="--bs-dropdown-min-width:auto">
+        <li class="d-flex flex-column justify-content-center">
+            <div th:replace="${content}"></div>
+        </li>
+    </ul>
+</div>
