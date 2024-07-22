@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ua.tonkoshkur.cloudstorage.common.SynchronizedOnUser;
 import ua.tonkoshkur.cloudstorage.minio.MinioNameValidator;
 import ua.tonkoshkur.cloudstorage.minio.MinioService;
 import ua.tonkoshkur.cloudstorage.util.PathHelper;
@@ -63,7 +62,6 @@ public class MinioFileService implements FileService {
         return minioService.download(fullPath);
     }
 
-    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void upload(long userId, MultipartFile multipartFile, @Nullable String folderPath)
@@ -82,7 +80,6 @@ public class MinioFileService implements FileService {
         minioService.uploadFile(multipartFile, fullPath);
     }
 
-    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void rename(long userId, String oldPath, String newName)
@@ -118,7 +115,6 @@ public class MinioFileService implements FileService {
         minioService.copy(fromFullPath, toFullPath);
     }
 
-    @SynchronizedOnUser
     @SneakyThrows
     @Override
     public void delete(long userId, String filePath) {
