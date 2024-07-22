@@ -31,7 +31,6 @@ I aim to deepen understanding of these technologies and expand my knowledge base
 - Spring Security
 - Spring Data JPA
 - Spring Session
-- Spring AOP
 - Thymeleaf
 - MariaDB
 - MinIO
